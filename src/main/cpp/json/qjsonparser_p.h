@@ -75,7 +75,7 @@ public:
 
         Parser *parser;
         int objectPosition;
-        QVarLengthArray<uint, 64> offsets;
+        QVector<uint> offsets;
 
         inline QJsonPrivate::Entry *entryAt(int i) const {
             return reinterpret_cast<QJsonPrivate::Entry *>(parser->data + objectPosition + offsets[i]);

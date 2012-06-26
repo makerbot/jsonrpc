@@ -37,7 +37,8 @@ env.Append(CCFLAGS='-Werror')
 
 cppenv = env.Clone()
 cppenv.Append(CPPPATH=Dir('#/obj/src/main/cpp/'))
-libjsonrpc = cppenv.Library('jsonrpc', Glob('#/obj/src/main/cpp/jsonrpc/*.cpp'))
+cppenv.Append(CPPPATH=Dir('#/obj/src/main/cpp/json/'))
+libjsonrpc = cppenv.Library('jsonrpc', Glob('#/obj/src/main/cpp/*/*.cpp'))
 
 testenv = cppenv.Clone()
 testenv.AlwaysBuild('check')

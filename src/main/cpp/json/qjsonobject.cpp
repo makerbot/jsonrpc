@@ -424,7 +424,7 @@ bool QJsonObject::operator!=(const QJsonObject &other) const
  */
 QJsonObject::iterator QJsonObject::erase(QJsonObject::iterator it)
 {
-    Q_ASSERT(d && d->ref.load() == 1);
+    Q_ASSERT(d && int(d->ref) == 1);
     if (it.o != this || it.i < 0 || it.i >= (int)o->length)
         return iterator(this, o->length);
 
@@ -925,7 +925,7 @@ void QJsonObject::detach(uint reserve)
         d->ref.ref();
         return;
     }
-    if (reserve == 0 && d->ref.load() == 1)
+    if (reserve == 0 && int(d->ref) == 1)
         return;
 
     QJsonPrivate::Data *x = d->clone(o, reserve);

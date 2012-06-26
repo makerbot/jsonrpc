@@ -774,6 +774,16 @@ static inline bool scanEscapeSequence(const char *&json, const char *end, uint *
     return true;
 }
 
+static inline bool isNonCharacter(uint ucs4) {
+    return ucs4 >= 0xfdd0 && (ucs4 <= 0xfdef || (ucs4 & 0xfffe) == 0xfffe);
+}
+
+static inline bool isSurrogate(uint ucs4) {
+    return (ucs4 - 0xd800u < 2048u);
+}
+
+static uint const LastValidCodePoint = 0x10ffff;
+
 static inline bool scanUtf8Char(const char *&json, const char *end, uint *result)
 {
     int need;
@@ -809,8 +819,8 @@ static inline bool scanUtf8Char(const char *&json, const char *end, uint *result
         uc = (uc << 6) | (ch & 0x3f);
     }
 
-    if (uc < min_uc || QChar::isNonCharacter(uc) ||
-        QChar::isSurrogate(uc) || uc > QChar::LastValidCodePoint) {
+    if (uc < min_uc || isNonCharacter(uc) ||
+        isSurrogate(uc) || uc > LastValidCodePoint) {
         return false;
     }
 
