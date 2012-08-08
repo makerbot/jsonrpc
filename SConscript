@@ -8,6 +8,16 @@ USE_GCOV = False
 env = Environment(ENV=os.environ)
 env.Append(CCFLAGS='-Wall')
 
+if 'QTDIR' not in env:
+    moc = env.WhereIs('moc-qt4') or env.WhereIs('moc4') or env.WhereIs('moc')
+    if moc:
+        env['QTDIR'] = os.path.dirname(os.path.dirname(moc))
+    elif 'darwin' == sys.platform:
+        env['QTDIR'] = os.path.expanduser('~/QtSDK/Desktop/Qt/4.8.1/gcc/')
+
+env.Tool('qt4', toolpath=[Dir('src/main/scons/')])
+env.EnableQt4Modules(['QtCore'])
+
 libjsonenv = env.Clone()
 libjsonenv.Append(CPPPATH=[Dir('#/../json-cpp/include/')])
 libjsonenv.Repository(Dir('#/../json-cpp/src/lib_json/'))
