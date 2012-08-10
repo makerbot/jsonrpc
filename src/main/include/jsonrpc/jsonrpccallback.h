@@ -9,7 +9,7 @@ class JsonRpcCallback
 {
 public:
     virtual ~JsonRpcCallback (void);
-    virtual void response (Json::Value const & response);
+    virtual void response (Json::Value const & response) = 0;
 };
 
 #endif

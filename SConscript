@@ -13,15 +13,6 @@ if 'win32' == sys.platform:
 
 env.Append(CCFLAGS='-Wall')
 
-libjsonenv = env.Clone()
-libjsonenv.Append(CPPPATH=[Dir('#/../json-cpp/include/')])
-libjsonenv.Repository(Dir('#/../json-cpp/src/lib_json/'))
-libjson = libjsonenv.Library(
-    'json', [
-        File('json_reader.cpp'),
-        File('json_value.cpp'),
-        File('json_writer.cpp'),])
-
 libjsonrpcenv = env.Clone()
 libjsonrpcenv.Append(CCFLAGS='-g')
 libjsonrpcenv.Append(CCFLAGS='-pedantic')
@@ -31,7 +22,6 @@ libjsonrpcenv.Append(CCFLAGS='-Wno-long-long')
 libjsonrpcenv.Append(CCFLAGS='-Werror')
 libjsonrpcenv.Append(CPPPATH=[Dir('#/../json-cpp/include/')])
 libjsonrpcenv.Append(CPPPATH=[Dir('src/main/include/')])
-libjsonrpcenv.Repository(Dir('#/../json-cpp/src/lib_json/'))
 libjsonrpc = libjsonrpcenv.Library(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])

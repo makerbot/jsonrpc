@@ -33,7 +33,7 @@ JsonRpcPrivate::invoke
     , JsonRpcCallback * const callback
     )
 {
-    Json::Value request (Json::arrayValue);
+    Json::Value request (Json::objectValue);
     request["jsonrpc"] = Json::Value ("2.0");
     request["method"] = Json::Value (methodName);
     request["params"] = params;
