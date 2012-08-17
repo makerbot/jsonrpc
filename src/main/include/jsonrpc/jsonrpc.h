@@ -37,6 +37,11 @@ public:
 
 private:
     JsonRpcPrivate * const m_private;
+
+    // Disable copy constructor and assignment.
+
+    JsonRpc (JsonRpc const &);
+    JsonRpc & operator= (JsonRpc const &);
 };
 
 #endif

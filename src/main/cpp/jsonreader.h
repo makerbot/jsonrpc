@@ -31,6 +31,11 @@ private:
     State m_state;
     std::stack <char> m_stack;
     std::ostringstream m_buffer;
+
+    // Disable copy constructor and assignment.
+
+    JsonReader (JsonReader const &);
+    JsonReader & operator= (JsonReader const &);
 };
 
 #endif

@@ -62,6 +62,11 @@ private:
     callbacks_type m_callbacks;
 
     friend class JsonReader;
+
+    // Disable copy constructor and assignment
+
+    JsonRpcPrivate (JsonRpcPrivate const &);
+    JsonRpcPrivate & operator= (JsonRpcPrivate const &);
 };
 
 #endif
