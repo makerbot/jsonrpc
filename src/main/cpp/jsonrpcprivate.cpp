@@ -173,7 +173,7 @@ JsonRpcPrivate::successResponse
     , Json::Value const & result
     ) const
 {
-    Json::Value response (Json::arrayValue);
+    Json::Value response (Json::objectValue);
     response["jsonrpc"] = Json::Value ("2.0");
     response["result"] = result;
     response["id"] = id;
