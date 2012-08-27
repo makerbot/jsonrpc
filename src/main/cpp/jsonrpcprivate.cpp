@@ -14,6 +14,7 @@
 JsonRpcPrivate::JsonRpcPrivate (JsonRpcStream * const output)
     : m_output (output)
     , m_jsonReader (* this)
+    , m_idCounter (0)
 {
 }
 
