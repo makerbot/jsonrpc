@@ -44,14 +44,18 @@ JsonRpcPrivate::invoke
         id = Json::Value (this->m_idCounter);
         this->m_idCounter += 1;
         request["id"] = id;
+
+        // Add callback to handle the response
+        if (not id.isNull ())
+        {
+            this->m_callbacks[id] = callback;
+        }
     }
+
+    // Send the request
     Json::FastWriter writer;
     std::string const string (writer.write (request));
     this->m_output->feed (string);
-    if (0 != callback and not id.isNull ())
-    {
-        this->m_callbacks[id] = callback;
-    }
 }
 
 void
