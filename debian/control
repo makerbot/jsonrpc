@@ -1,0 +1,17 @@
+Source: mb-libjsonrpc
+Section: libs
+Priority: extra
+Maintainer: MakerBot Industries dev team <dev@makerbot.com>
+Build-Depends: debhelper (>= 8.0.0), cdbs, scons, mb-libjsoncpp-dev
+Standards-Version: 3.9.2
+Homepage: https://github.com/makerbot/json-cpp
+#Vcs-Git: git@github.com:makerbot/json-cpp.git
+#Vcs-Browser: https://github.com/makerbot/json-cpp
+
+Package: mb-libjsonrpc-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, mb-libjsoncpp-dev
+Description: MakerBot RPC JSON library
+ This package is a build convenience. It creates a static library
+ which is linked and need not be installed on a user's machine.

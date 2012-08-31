@@ -20,11 +20,18 @@ libjsonrpcenv.Append(CCFLAGS='-Wextra')
 libjsonrpcenv.Append(CCFLAGS='-Wno-variadic-macros')
 libjsonrpcenv.Append(CCFLAGS='-Wno-long-long')
 libjsonrpcenv.Append(CCFLAGS='-Werror')
-libjsonrpcenv.Append(CPPPATH=[Dir('#/../json-cpp/include/')])
+
+if ARGUMENTS.get('debian_build',0):
+   libjsonrpcenv.Append(CPPPATH=[Dir('/usr/include/makerbot/')])
+else:
+   libjsonrpcenv.Append(CPPPATH=[Dir('#/../json-cpp/include/')])
+
 libjsonrpcenv.Append(CPPPATH=[Dir('src/main/include/')])
 libjsonrpc = libjsonrpcenv.Library(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])
+
+env.Alias('install',None)
 
 '''
 testenv = cppenv.Clone()

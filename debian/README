@@ -1,0 +1,6 @@
+The Debian Package mb-libjsonrpc-dev
+===---------------------------------
+
+This package builds the MakerBot jsonrpc static library.
+
+ -- MakerBot Industries dev team <dev@makerbot.com>  Wed, 31 Aug 2012 14:05:44 -0400
