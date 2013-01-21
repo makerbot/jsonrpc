@@ -25,7 +25,7 @@ libjsonrpcenv.Append(CPPPATH=[Dir('src/main/include/')])
 
 libjsonrpcenv.Tool('mb_install', toolpath=[Dir('submodules/mw-scons-tools')])
 
-libjsonrpcenv.MBAddDevelLibPath('../json-cpp/obj')
+libjsonrpcenv.MBAddDevelLibPath('#/../json-cpp/obj')
 libjsonrpcenv.MBAddDevelIncludePath('#/../json-cpp/include')
 
 libjsonrpcenv.Append(LIBS = 'json')
@@ -35,7 +35,7 @@ libjsonrpc = libjsonrpcenv.SharedLibrary(
         Glob('src/main/cpp/*.cpp'),])
 
 libjsonrpcenv.MBInstallLib(libjsonrpc)
-libjsonrpcenv.MBInstallHeaders(Dir('#/src/main/include'))
+libjsonrpcenv.MBInstallHeaders('#/src/main/include/*')
 
 libjsonrpcenv.MBCreateInstallTarget()
 
