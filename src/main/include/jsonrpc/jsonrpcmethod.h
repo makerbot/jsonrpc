@@ -3,7 +3,7 @@
 #ifndef JSONRPC_JSONRPCMETHOD_H
 #define JSONRPC_JSONRPCMETHOD_H (1)
 
-#include <json/value.h>
+#include <jsoncpp/json/value.h>
 
 class JsonRpcMethod
 {

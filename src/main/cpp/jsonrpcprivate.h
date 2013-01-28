@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 
-#include <json/value.h>
+#include <jsoncpp/json/value.h>
 
 #include <jsonrpc/jsonrpcexception.h>
 #include <jsonrpc/jsonrpcmethod.h>

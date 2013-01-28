@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include <json/reader.h>
-#include <json/value.h>
-#include <json/writer.h>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/value.h>
+#include <jsoncpp/json/writer.h>
 
 #include <jsonrpc/jsonrpcmethod.h>
 #include <jsonrpc/jsonrpcstream.h>
