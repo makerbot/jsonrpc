@@ -1,2 +1,2 @@
-obj/*.a /usr/lib/makerbot
+obj/*.so /usr/lib/makerbot
 src/main/include/* /usr/include/makerbot
