@@ -33,6 +33,7 @@ libjsonrpcenv.Append(LIBS = 'json')
 libjsonrpc = libjsonrpcenv.SharedLibrary(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])
+libjsonrpcenv.Clean(libjsonrpc, '#\obj')
 
 libjsonrpcenv.MBInstallLib(libjsonrpc)
 libjsonrpcenv.MBInstallHeaders(libjsonrpcenv.MBGlob('#/src/main/include/*'))
