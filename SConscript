@@ -34,8 +34,8 @@ libjsonrpc = libjsonrpcenv.SharedLibrary(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])
 
-#libjsonrpcenv.MBInstallLib(libjsonrpc)
-#libjsonrpcenv.MBInstallHeaders(libjsonrpcenv.MBGlob('#/src/main/include/*'))
+libjsonrpcenv.MBInstallLib(libjsonrpc)
+libjsonrpcenv.MBInstallHeaders(libjsonrpcenv.MBGlob('#/src/main/include/*'))
 
 libjsonrpcenv.MBCreateInstallTarget()
 

@@ -1,2 +1,0 @@
-obj/*.so /usr/lib/makerbot
-src/main/include/* /usr/include/makerbot
