@@ -5,7 +5,9 @@
 
 #include <json/value.h>
 
-class JsonRpcException : public std::exception
+#include <stdexcept>
+
+class JsonRpcException : public std::runtime_error
 {
 public:
     JsonRpcException

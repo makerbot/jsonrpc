@@ -11,7 +11,8 @@ JsonRpcException::JsonRpcException
     , std::string const & message
     , Json::Value const & data
     )
-    : m_code (code)
+    : std::runtime_error("JsonRpcException")
+    , m_code (code)
     , m_message (message)
     , m_data (data)
 {
