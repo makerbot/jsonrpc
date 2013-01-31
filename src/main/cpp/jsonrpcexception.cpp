@@ -7,11 +7,15 @@
 #include <jsonrpc/jsonrpcexception.h>
 
 JsonRpcException::JsonRpcException
-    ( int const code
+    ( std::string const & methodName
+    , Json::Value const & params
+    , int const code
     , std::string const & message
     , Json::Value const & data
     )
     : std::runtime_error("JsonRpcException")
+    , m_methodName (methodName)
+    , m_params (params)
     , m_code (code)
     , m_message (message)
     , m_data (data)
@@ -20,6 +24,18 @@ JsonRpcException::JsonRpcException
 
 JsonRpcException::~JsonRpcException (void) throw ()
 {
+}
+
+std::string const &
+JsonRpcException::methodName (void) const
+{
+    return m_methodName;
+}
+
+Json::Value const &
+JsonRpcException::params (void) const
+{
+    return m_params;
 }
 
 int

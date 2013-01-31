@@ -11,17 +11,23 @@ class JsonRpcException : public std::runtime_error
 {
 public:
     JsonRpcException
-        ( int code
+        ( std::string const & methodName
+        , Json::Value const & params
+        , int code
         , std::string const & message
         , Json::Value const & data
         );
     virtual ~JsonRpcException (void) throw ();
 
+    Json::Value const & params (void) const;
+    std::string const & methodName (void) const;
     int code (void) const;
     std::string const & message (void) const;
     Json::Value const & data (void) const;
 
 private:
+    std::string const m_methodName;
+    Json::Value const m_params;
     int const m_code;
     std::string const m_message;
     Json::Value const m_data;
