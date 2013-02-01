@@ -3,8 +3,23 @@
 #include <string>
 
 #include <json/value.h>
+#include <json/writer.h>
 
 #include <jsonrpc/jsonrpcexception.h>
+
+/// As a convenience for easy logging, construct a nice what() string
+static std::string constructWhatString
+    ( std::string const & methodName
+    , Json::Value const & params
+    , std::string const & message
+    , Json::Value const & data
+    )
+{
+    return ("JsonRpcException(methodName=" + methodName +
+            "\n  params=" + Json::FastWriter().write(params) +
+            "\n  message=" + message +
+            "\n  data=" + Json::FastWriter().write(data));
+}
 
 JsonRpcException::JsonRpcException
     ( std::string const & methodName
@@ -13,9 +28,13 @@ JsonRpcException::JsonRpcException
     , std::string const & message
     , Json::Value const & data
     )
-    : std::runtime_error("JsonRpcException")
+    : std::runtime_error(constructWhatString(methodName,
+                                             params,
+                                             message,
+                                             data))
     , m_methodName (methodName)
-    , m_params (params)
+    
+, m_params (params)
     , m_code (code)
     , m_message (message)
     , m_data (data)
