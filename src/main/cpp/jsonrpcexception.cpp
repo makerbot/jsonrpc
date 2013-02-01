@@ -33,8 +33,7 @@ JsonRpcException::JsonRpcException
                                              message,
                                              data))
     , m_methodName (methodName)
-    
-, m_params (params)
+    , m_params (params)
     , m_code (code)
     , m_message (message)
     , m_data (data)
