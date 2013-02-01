@@ -3,7 +3,7 @@
 #ifndef JSONRPC_JSONRPCCALLBACK_H
 #define JSONRPC_JSONRPCCALLBACK_H (1)
 
-#include <json/value.h>
+#include <jsoncpp/json/value.h>
 
 class JsonRpcCallback
 {

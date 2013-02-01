@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <string>
 
-#include <json/value.h>
+#include <jsoncpp/json/value.h>
 
 #include <jsonrpc/jsonrpccallback.h>
 #include <jsonrpc/jsonrpcmethod.h>

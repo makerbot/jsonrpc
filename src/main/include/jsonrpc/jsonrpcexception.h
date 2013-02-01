@@ -3,7 +3,7 @@
 #ifndef JSONRPC_JSONRPCEXCEPTION_H
 #define JSONRPC_JSONRPCEXCEPTION_H (1)
 
-#include <json/value.h>
+#include <jsoncpp/json/value.h>
 
 #include <stdexcept>
 
