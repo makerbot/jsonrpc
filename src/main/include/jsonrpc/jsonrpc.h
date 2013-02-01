@@ -11,6 +11,7 @@
 #include <jsonrpc/jsonrpccallback.h>
 #include <jsonrpc/jsonrpcmethod.h>
 #include <jsonrpc/jsonrpcstream.h>
+#include <jsonrpc/jsonrpcexception.h>
 
 class JsonRpcPrivate;
 

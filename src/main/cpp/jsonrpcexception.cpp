@@ -3,15 +3,38 @@
 #include <string>
 
 #include <jsoncpp/json/value.h>
+#include <jsoncpp/json/writer.h>
 
 #include <jsonrpc/jsonrpcexception.h>
 
-JsonRpcException::JsonRpcException
-    ( int const code
+/// As a convenience for easy logging, construct a nice what() string
+static std::string constructWhatString
+    ( std::string const & methodName
+    , Json::Value const & params
     , std::string const & message
     , Json::Value const & data
     )
-    : m_code (code)
+{
+    return ("JsonRpcException(methodName=" + methodName +
+            "\n  params=" + Json::FastWriter().write(params) +
+            "\n  message=" + message +
+            "\n  data=" + Json::FastWriter().write(data));
+}
+
+JsonRpcException::JsonRpcException
+    ( std::string const & methodName
+    , Json::Value const & params
+    , int const code
+    , std::string const & message
+    , Json::Value const & data
+    )
+    : std::runtime_error(constructWhatString(methodName,
+                                             params,
+                                             message,
+                                             data))
+    , m_methodName (methodName)
+    , m_params (params)
+    , m_code (code)
     , m_message (message)
     , m_data (data)
 {
@@ -19,6 +42,18 @@ JsonRpcException::JsonRpcException
 
 JsonRpcException::~JsonRpcException (void) throw ()
 {
+}
+
+std::string const &
+JsonRpcException::methodName (void) const
+{
+    return m_methodName;
+}
+
+Json::Value const &
+JsonRpcException::params (void) const
+{
+    return m_params;
 }
 
 int
