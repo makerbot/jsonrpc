@@ -1,3 +1,9 @@
+mb-libjsonrpc (2.0.0) precise; urgency=low
+
+  * Improve JsonRpcException
+
+ -- MakerBot Industries dev team <dev@makerbot.com>  Fri, 15 Feb 2013 10:39:00 -0400
+
 mb-libjsonrpc (0.01) precise; urgency=low
 
   * Initial Release.
