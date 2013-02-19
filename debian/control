@@ -17,5 +17,5 @@ Description: MakerBot RPC JSON library runtime shared object
 Package: mb-libjsonrpc-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libjsoncpp-dev, mb-libjsonrpc (=2.0.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libjsoncpp-dev, mb-libjsonrpc (>=2.0.0)
 Description: MakerBot RPC JSON library development headers
