@@ -38,14 +38,3 @@ libjsonrpcenv.MBInstallHeaders(libjsonrpcenv.MBGlob('#/src/main/include/jsonrpc/
                                'jsonrpc')
 
 libjsonrpcenv.MBCreateInstallTarget()
-
-'''
-testenv = cppenv.Clone()
-testenv.AlwaysBuild('check')
-testenv.Append(LIBS=[libjsonrpc, 'gtest', 'pthread'])
-for node in Glob('#/obj/src/test/cpp/test-*.cpp'):
-    root, ext = os.path.splitext(os.path.basename(node.abspath))
-    test = testenv.Program(root, [node])
-    alias = testenv.Alias('check', [test], test[0].abspath)
-    testenv.AlwaysBuild(alias)
-'''
