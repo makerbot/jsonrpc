@@ -36,7 +36,7 @@ JsonReader::reset (void)
     this->m_state = S0;
     this->m_buffer.str (std::string ());
 
-    while (not this->m_stack.empty ())
+    while (! this->m_stack.empty ())
     {
         this->m_stack.pop ();
     }
@@ -47,7 +47,7 @@ JsonReader::send (void)
 {
     std::string const jsonText (this->m_buffer.str ());
     this->reset ();
-    if (not jsonText.empty ())
+    if (! jsonText.empty ())
     {
         this->m_jsonRpcPrivate.jsonReaderCallback (jsonText);
     }
@@ -59,13 +59,13 @@ JsonReader::transition (char const ch)
     switch (this->m_state)
     {
     case S0:
-        if ('{' == ch or '[' == ch)
+        if ('{' == ch || '[' == ch)
         {
             this->m_state = S1;
             this->m_stack.push (ch);
         }
         else
-        if (' ' != ch and '\t' != ch and '\n' != ch and '\r' != ch)
+        if (' ' != ch && '\t' != ch && '\n' != ch && '\r' != ch)
         {
             this->send ();
         }
@@ -77,12 +77,12 @@ JsonReader::transition (char const ch)
             this->m_state = S2;
         }
         else
-        if ('{' == ch or '[' == ch)
+        if ('{' == ch || '[' == ch)
         {
             this->m_stack.push (ch);
         }
         else
-        if ('}' == ch or ']' == ch)
+        if ('}' == ch || ']' == ch)
         {
             bool send (false);
             if (this->m_stack.empty ())
@@ -93,8 +93,8 @@ JsonReader::transition (char const ch)
             {
                 char const firstch (this->m_stack.top ());
                 this->m_stack.pop ();
-                if (('{' == firstch and '}' != ch)
-                    or ('[' == firstch and ']' != ch))
+                if (('{' == firstch && '}' != ch)
+                    || ('[' == firstch && ']' != ch))
                 {
                     send = true;
                 }

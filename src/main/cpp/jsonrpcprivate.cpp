@@ -46,7 +46,7 @@ JsonRpcPrivate::invoke
         request["id"] = id;
 
         // Add callback to handle the response
-        if (not id.isNull ())
+        if (! id.isNull ())
         {
             this->m_callbacks[id] = callback;
         }
@@ -87,7 +87,7 @@ JsonRpcPrivate::errorResponse
     Json::Value error (Json::objectValue);
     error["code"] = Json::Value (code);
     error["message"] = Json::Value (message);
-    if (not data.isNull ())
+    if (! data.isNull ())
     {
         error["data"] = data;
     }
@@ -133,9 +133,9 @@ JsonRpcPrivate::isRequest (Json::Value const & value)
 {
     bool const result
         ( value.isMember ("jsonrpc")
-          and Json::Value ("2.0") == value["jsonrpc"]
-          and value.isMember ("method")
-          and value["method"].isString ()
+          && Json::Value ("2.0") == value["jsonrpc"]
+          && value.isMember ("method")
+          && value["method"].isString ()
         );
     return result;
 }
@@ -145,8 +145,8 @@ JsonRpcPrivate::isSuccessResponse (Json::Value const & value)
 {
     bool const result
         ( value.isMember ("jsonrpc")
-          and Json::Value ("2.0") == value["jsonrpc"]
-          and value.isMember ("result")
+          && Json::Value ("2.0") == value["jsonrpc"]
+          && value.isMember ("result")
         );
     return result;
 }
@@ -156,8 +156,8 @@ JsonRpcPrivate::isErrorResponse (Json::Value const & value)
 {
     bool const result
         ( value.isMember ("jsonrpc")
-          and Json::Value ("2.0") == value["jsonrpc"]
-          and value.isMember ("error")
+          && Json::Value ("2.0") == value["jsonrpc"]
+          && value.isMember ("error")
         );
     return result;
 }
@@ -167,7 +167,7 @@ JsonRpcPrivate::isResponse (Json::Value const & value)
 {
     bool const result
         ( this->isSuccessResponse (value)
-          or this->isErrorResponse (value)
+          || this->isErrorResponse (value)
         );
     return result;
 }
@@ -242,7 +242,7 @@ Json::Value
 JsonRpcPrivate::handleObject (Json::Value const & jsonObject)
 {
     Json::Value response;
-    if (not jsonObject.isObject ())
+    if (! jsonObject.isObject ())
     {
         Json::Value const null;
         response = this->invalidRequest (null);
@@ -288,7 +288,7 @@ JsonRpcPrivate::handleArray (Json::Value const & jsonArray)
         {
             Json::Value const subrequest (* i);
             Json::Value const subresponse (this->handleObject (subrequest));
-            if (not subresponse.isNull ())
+            if (! subresponse.isNull ())
             {
                 response.append (subresponse);
             }
@@ -309,7 +309,7 @@ JsonRpcPrivate::jsonReaderCallback (std::string const & jsonText)
     Json::Value response;
     Json::Reader reader;
     bool const success (reader.parse (jsonText, request));
-    if (not success)
+    if (! success)
     {
         response = this->parseError ();
     }
@@ -329,7 +329,7 @@ JsonRpcPrivate::jsonReaderCallback (std::string const & jsonText)
         response = this->invalidRequest (null);
     }
 
-    if (not response.isNull ())
+    if (! response.isNull ())
     {
         Json::FastWriter writer;
         std::string const string (writer.write (response));
