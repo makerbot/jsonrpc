@@ -7,10 +7,6 @@ USE_GCOV = False
 
 env = Environment(ENV=os.environ)
 
-if 'win32' == sys.platform:
-    env.Tool('mb_mingw', toolpath=[Dir('submodules/mw-scons-tools')])
-    env.Replace(CCFLAGS=[])
-
 env.Append(CCFLAGS='-Wall')
 
 libjsonrpcenv = env.Clone()
