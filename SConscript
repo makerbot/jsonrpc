@@ -12,10 +12,11 @@ env.Append(CCFLAGS='-Wall')
 libjsonrpcenv = env.Clone()
 libjsonrpcenv.Append(CCFLAGS='-g')
 libjsonrpcenv.Append(CCFLAGS='-pedantic')
-libjsonrpcenv.Append(CCFLAGS='-Wextra')
-libjsonrpcenv.Append(CCFLAGS='-Wno-variadic-macros')
-libjsonrpcenv.Append(CCFLAGS='-Wno-long-long')
-libjsonrpcenv.Append(CCFLAGS='-Werror')
+if 'win32' != sys.platform:
+    libjsonrpcenv.Append(CCFLAGS='-Wextra')
+    libjsonrpcenv.Append(CCFLAGS='-Wno-variadic-macros')
+    libjsonrpcenv.Append(CCFLAGS='-Wno-long-long')
+    libjsonrpcenv.Append(CCFLAGS='-Werror')
 
 libjsonrpcenv.Append(CPPPATH=[Dir('src/main/include/')])
 
