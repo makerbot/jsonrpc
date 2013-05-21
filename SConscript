@@ -3,16 +3,47 @@
 import os
 import sys
 
-USE_GCOV = False
-
 env = Environment(ENV=os.environ)
 
-env.Append(CCFLAGS='-Wall')
+Import('debug')
+
+includes = [
+    Dir('#/src/main/include/jsonrpc/')]
+sources = [
+    Glob('src/main/cpp/*.cpp')]
 
 libjsonrpcenv = env.Clone()
-libjsonrpcenv.Append(CCFLAGS='-g')
-libjsonrpcenv.Append(CCFLAGS='-pedantic')
-if 'win32' != sys.platform:
+libjsonrpcenv.Tool('mb_install', toolpath=[Dir('submodules/mw-scons-tools')])
+
+# Compiler flags
+libjsonrpcenv.Append(CCFLAGS='-Wall')
+
+if libjsonrpcenv.MBIsWindows():
+    if debug:
+        libjsonrpcenv.Append(CCFLAGS='-Zi')
+        libjsonrpcenv.Append(CCFLAGS='-Od')
+    else:
+        libjsonrpcenv.Append(CCFLAGS='-O2')
+    # assignment operator could not be generated
+    libjsonrpcenv.Append(CCFLAGS='/wd4512')
+    # unreferenced inline function has been removed
+    libjsonrpcenv.Append(CCFLAGS='/wd4514')
+    # function not inlined
+    libjsonrpcenv.Append(CCFLAGS='/wd4710')
+    # 'bytes' bytes padding added after member 'member'
+    libjsonrpcenv.Append(CCFLAGS='/wd4820')
+    # exception specification
+    libjsonrpcenv.Append(CCFLAGS='/wd4986')
+    # Turn on proper exception handling. Come on, msvc, really?
+    libjsonrpcenv.Append(CCFLAGS='/EHsc')
+
+else:
+    if debug:
+        libjsonrpcenv.Append(CCFLAGS='-g')
+    else:
+        libjsonrpcenv.Append(CCFLAGS='-O2')
+
+    libjsonrpcenv.Append(CCFLAGS='-pedantic')
     libjsonrpcenv.Append(CCFLAGS='-Wextra')
     libjsonrpcenv.Append(CCFLAGS='-Wno-variadic-macros')
     libjsonrpcenv.Append(CCFLAGS='-Wno-long-long')
@@ -20,18 +51,15 @@ if 'win32' != sys.platform:
 
 libjsonrpcenv.Append(CPPPATH=[Dir('src/main/include/')])
 
-libjsonrpcenv.Tool('mb_install', toolpath=[Dir('submodules/mw-scons-tools')])
-
 libjsonrpcenv.MBAddDevelLibPath('#/../json-cpp/obj')
 libjsonrpcenv.MBAddDevelIncludePath('#/../json-cpp/include')
 
 libjsonrpcenv.MBAddLib('jsoncpp')
 
 libjsonrpcenv.MBSetLibSymName('jsonrpc')
-libjsonrpc = libjsonrpcenv.SharedLibrary(
-    'jsonrpc', [
-        Glob('src/main/cpp/*.cpp'),])
-libjsonrpcenv.Clean(libjsonrpc, '#\obj')
+libjsonrpc = libjsonrpcenv.SharedLibrary('jsonrpc', sources)
+
+libjsonrpcenv.Clean(libjsonrpc, '#/obj')
 
 libjsonrpcenv.MBInstallLib(libjsonrpc, 'jsonrpc')
 libjsonrpcenv.MBInstallHeaders(libjsonrpcenv.MBGlob('#/src/main/include/jsonrpc/*'),
