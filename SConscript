@@ -36,6 +36,8 @@ if libjsonrpcenv.MBIsWindows():
     libjsonrpcenv.Append(CCFLAGS='/wd4986')
     # Turn on proper exception handling. Come on, msvc, really?
     libjsonrpcenv.Append(CCFLAGS='/EHsc')
+    # Use the json-cpp dll delcarations
+    libjsonrpcenv.Append(CCFLAGS='/DJSON_DLL')
 
 else:
     if debug:
