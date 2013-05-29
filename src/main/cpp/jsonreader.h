@@ -7,18 +7,19 @@
 #include <sstream>
 #include <stack>
 
+#include <jsonrpc/jsonrpcconfig.h>
 #include <jsonrpc/jsonrpc.h>
 #include <jsonrpc/jsonrpcstream.h>
 
 class JsonReader : public JsonRpcStream
 {
 public:
-    JsonReader (JsonRpcPrivate &);
+    JSONRPC_API JsonReader (JsonRpcPrivate &);
 
-    void feed (char ch);
-    void feed (char const *, std::size_t);
-    void feed (std::string const &);
-    void feedeof (void);
+    JSONRPC_API void feed (char ch);
+    JSONRPC_API void feed (char const *, std::size_t);
+    JSONRPC_API void feed (std::string const &);
+    JSONRPC_API void feedeof (void);
 
 private:
     enum State { S0, S1, S2, S3 };

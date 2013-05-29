@@ -174,7 +174,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;JSONRPC_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\jsonrpc\src\main\include;$(ProjectDir)..\..\..\..\json-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -240,7 +240,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;JSONRPC_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\jsonrpc\src\main\include;$(ProjectDir)..\..\..\..\json-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -298,6 +298,7 @@
     <ClInclude Include="..\..\..\src\main\cpp\jsonrpcprivate.h" />
     <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpc.h" />
     <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpccallback.h" />
+    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcconfig.h" />
     <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcexception.h" />
     <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcmethod.h" />
     <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcstream.h" />

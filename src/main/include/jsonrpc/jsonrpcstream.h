@@ -6,16 +6,17 @@
 #include <cstddef>
 #include <string>
 
+#include <jsonrpc/jsonrpcconfig.h>
 #include <jsoncpp/json/value.h>
 
 class JsonRpcStream
 {
 public:
-    virtual ~JsonRpcStream (void);
+    JSONRPC_API virtual ~JsonRpcStream (void);
 
-    virtual void feed (char const * buffer, std::size_t length) = 0;
-    virtual void feed (std::string const & buffer) = 0;
-    virtual void feedeof (void) = 0;
+    JSONRPC_API virtual void feed (char const * buffer, std::size_t length) = 0;
+    JSONRPC_API virtual void feed (std::string const & buffer) = 0;
+    JSONRPC_API virtual void feedeof (void) = 0;
 };
 
 #endif
