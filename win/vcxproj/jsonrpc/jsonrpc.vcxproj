@@ -4,6 +4,7 @@
     <ProjectGuid>{570AF4D3-AD77-4D5E-9B25-905549E60A71}</ProjectGuid>
     <RootNamespace>jsonrpc</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_default_to_DLL.proj" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_ProjConfig_DLL.proj" />
   <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_ProjConfig_LIB.proj" />

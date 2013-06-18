@@ -31,7 +31,7 @@ libjsonrpcenv.MBAddDevelIncludePath('#/../json-cpp/include')
 libjsonrpcenv.MBAddLib('jsoncpp')
 
 libjsonrpcenv.MBSetLibSymName('jsonrpc')
-libjsonrpc = libjsonrpcenv.SharedLibrary(
+libjsonrpc = libjsonrpcenv.MBSharedLibrary(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])
 libjsonrpcenv.Clean(libjsonrpc, '#\obj')
