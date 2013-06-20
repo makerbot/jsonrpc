@@ -4,39 +4,49 @@
     <ProjectGuid>{570AF4D3-AD77-4D5E-9B25-905549E60A71}</ProjectGuid>
     <RootNamespace>jsonrpc</RootNamespace>
   </PropertyGroup>
-  <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_default_to_DLL.proj" />
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_ProjConfig_DLL.proj" />
-  <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_ProjConfig_LIB.proj" />
+  <PropertyGroup>
+    <MBCanBeLib>true</MBCanBeLib>
+    <MBCanBeDLL>true</MBCanBeDLL>
+    <MBCanBeApp>false</MBCanBeApp>
+    <MBDefaultConfigurationType>DynamicLibrary</MBDefaultConfigurationType>
+  </PropertyGroup>
   <Import Project="..\..\..\submodules\mw-scons-tools\mb_msvc_common.proj" />
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ItemDefinitionGroup Condition="true">
+  <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>$(MBCommonPreprocessorDefs);$(MBUseJsonDll);$(MBBuildJsonRpcDll);%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(MBIncludeJsonRpc);$(MBIncludeJson);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>
+        $(MBCommonPreprocessorDefs);
+        $(MBUseJsonDll);
+        $(MBBuildJsonRpcDll);
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+        $(MBIncludeJsonRpc);
+        $(MBIncludeJson);
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\main\cpp\jsonreader.h" />
-    <ClInclude Include="..\..\..\src\main\cpp\jsonrpcprivate.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpc.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpccallback.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcconfig.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcexception.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcmethod.h" />
-    <ClInclude Include="..\..\..\src\main\include\jsonrpc\jsonrpcstream.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\cpp\jsonreader.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\cpp\jsonrpcprivate.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpc.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpccallback.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpcconfig.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpcexception.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpcmethod.h" />
+    <ClInclude Include="$(MBRepoRoot)\src\main\include\jsonrpc\jsonrpcstream.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\main\cpp\jsonreader.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpc.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpccallback.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpcexception.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpcmethod.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpcprivate.cpp" />
-    <ClCompile Include="..\..\..\src\main\cpp\jsonrpcstream.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonreader.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpc.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpccallback.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpcexception.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpcmethod.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpcprivate.cpp" />
+    <ClCompile Include="$(MBRepoRoot)\src\main\cpp\jsonrpcstream.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\json-cpp\win\vcxproj\jsoncpp\jsoncpp.vcxproj">
+    <ProjectReference Include="$(MBJsonProject)">
       <Project>{304c1572-3f84-4696-907b-f6a03867584a}</Project>
     </ProjectReference>
   </ItemGroup>
