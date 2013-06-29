@@ -11,7 +11,7 @@
 
 #include "jsonrpcprivate.h"
 
-JsonRpcPrivate::JsonRpcPrivate (JsonRpcStream * const output)
+JsonRpcPrivate::JsonRpcPrivate (JsonRpcOutputStream * const output)
     : m_output (output)
     , m_jsonReader (* this)
     , m_idCounter (0)
@@ -55,7 +55,7 @@ JsonRpcPrivate::invoke
     // Send the request
     Json::FastWriter writer;
     std::string const string (writer.write (request));
-    this->m_output->feed (string);
+    this->m_output->send (string);
 }
 
 void
@@ -333,7 +333,7 @@ JsonRpcPrivate::jsonReaderCallback (std::string const & jsonText)
     {
         Json::FastWriter writer;
         std::string const string (writer.write (response));
-        this->m_output->feed (string);
+        this->m_output->send (string);
     }
 }
 

@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <string>
 
-JsonRpc::JsonRpc(JsonRpcStream * const output)
+JsonRpc::JsonRpc(JsonRpcOutputStream * const output)
     : m_private(new JsonRpcPrivate(output)) {
 }
 

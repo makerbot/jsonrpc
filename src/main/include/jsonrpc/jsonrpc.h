@@ -8,6 +8,7 @@
 #include <jsonrpc/jsonrpcconfig.h>
 #include <jsonrpc/jsonrpccallback.h>
 #include <jsonrpc/jsonrpcmethod.h>
+#include <jsonrpc/jsonrpcoutputstream.h>
 #include <jsonrpc/jsonrpcstream.h>
 #include <jsonrpc/jsonrpcexception.h>
 
@@ -33,7 +34,7 @@ class JsonRpc {
   /// Construct JsonRpc object
   ///
   /// The 'output' stream is used to send data to the other endpoint.
-  JSONRPC_API JsonRpc(JsonRpcStream * const output);
+  JSONRPC_API JsonRpc(JsonRpcOutputStream * const output);
 
   /// Destroy JsonRpc object
   JSONRPC_API ~JsonRpc();

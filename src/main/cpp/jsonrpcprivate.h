@@ -18,7 +18,7 @@
 class JsonRpcPrivate : public JsonRpcStream
 {
 public:
-    JsonRpcPrivate (JsonRpcStream *);
+    JsonRpcPrivate (JsonRpcOutputStream *);
 
     void addMethod (std::string const &, JsonRpcMethod *);
 
@@ -55,7 +55,7 @@ private:
     Json::Value handleArray (Json::Value const &);
     void jsonReaderCallback (std::string const &);
 
-    JsonRpcStream * const m_output;
+    JsonRpcOutputStream * const m_output;
     JsonReader m_jsonReader;
     methods_type m_methods;
     int m_idCounter;
