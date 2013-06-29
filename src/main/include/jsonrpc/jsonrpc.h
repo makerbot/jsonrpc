@@ -1,10 +1,7 @@
-// vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
+// Copyright 2013 MakerBot Industries
 
-#ifndef JSONRPC_JSONRPC_H
-#define JSONRPC_JSONRPC_H (1)
-
-#include <cstddef>
-#include <string>
+#ifndef JSONRPC_JSONRPC_H_
+#define JSONRPC_JSONRPC_H_
 
 #include <jsoncpp/json/value.h>
 
@@ -14,36 +11,61 @@
 #include <jsonrpc/jsonrpcstream.h>
 #include <jsonrpc/jsonrpcexception.h>
 
+#include <memory>
+#include <string>
+
 class JsonRpcPrivate;
 
-class JsonRpc : public JsonRpcStream
-{
-public:
-    JSONRPC_API JsonRpc (JsonRpcStream * output);
-    JSONRPC_API ~JsonRpc (void);
+/// Public interface for a JSON-RPC endpoint
+///
+/// This class does not directly handle socket IO. It does handle
+/// parsing input from, and formatting output to, the other endpoint.
+///
+/// When data is received from the other endpoint, it should be passed
+/// into the JsonRpc object via one of the feedInput() overloaded
+/// methods.
+///
+/// The invoke() method is used to invoke a method on the other
+/// endpoint. The invocation will be sent via the JsonRpcStream
+/// subclass passed in to the constructor.
+class JsonRpc {
+ public:
+  /// Construct JsonRpc object
+  ///
+  /// The 'output' stream is used to send data to the other endpoint.
+  JSONRPC_API JsonRpc(JsonRpcStream * const output);
 
-    JSONRPC_API void addMethod
-        ( std::string const & methodName
-        , JsonRpcMethod * method
-        );
+  /// Destroy JsonRpc object
+  JSONRPC_API ~JsonRpc();
 
-    JSONRPC_API void invoke
-        ( std::string const & methodName
-        , Json::Value const & params
-        , JsonRpcCallback * callback = 0
-        );
+  /// Add a client method that the other endpoint can invoke
+  JSONRPC_API void addMethod(
+      const std::string &methodName,
+      JsonRpcMethod * const method);
 
-    JSONRPC_API void feed (char const * buffer, std::size_t length);
-    JSONRPC_API void feed (std::string const & buffer);
-    JSONRPC_API void feedeof (void);
+  /// Invoke a method on the other endpoint
+  JSONRPC_API void invoke(
+      const std::string &methodName,
+      const Json::Value &params,
+      JsonRpcCallback * callback = 0);
 
-private:
-    JsonRpcPrivate * const m_private;
+  /// Input data received from the other endpoint to JsonReader
+  JSONRPC_API void feedInput(
+      const char * const buffer,
+      const std::size_t length);
 
-    // Disable copy constructor and assignment.
+  /// Input data received from the other endpoint to JsonReader
+  JSONRPC_API void feedInput(const std::string &buffer);
 
-    JsonRpc (JsonRpc const &);
-    JsonRpc & operator= (JsonRpc const &);
+  /// Input end-of-file received from the other endpoint to JsonReader
+  JSONRPC_API void feedEOF();
+
+ private:
+  JsonRpc(JsonRpc const &) = delete;
+
+  JsonRpc &operator=(const JsonRpc &) = delete;
+
+  std::unique_ptr<JsonRpcPrivate> m_private;
 };
 
-#endif
+#endif  // JSONRPC_JSONRPC_H_
