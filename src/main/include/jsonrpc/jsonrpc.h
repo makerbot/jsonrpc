@@ -62,9 +62,9 @@ class JsonRpc {
   JSONRPC_API void feedEOF();
 
  private:
-  JsonRpc(JsonRpc const &) = delete;
+  JsonRpc(JsonRpc const &);
 
-  JsonRpc &operator=(const JsonRpc &) = delete;
+  JsonRpc &operator=(const JsonRpc &);
 
   std::unique_ptr<JsonRpcPrivate> m_private;
 };
