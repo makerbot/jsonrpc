@@ -23,7 +23,7 @@ void JsonRpc::addMethod(
 void JsonRpc::invoke(
     const std::string &methodName,
     const Json::Value &params,
-    JsonRpcCallback * callback) {
+    std::weak_ptr<JsonRpcCallback> callback) {
   m_private->invoke(methodName, params, callback);
 }
 
