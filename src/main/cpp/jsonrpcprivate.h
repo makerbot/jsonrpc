@@ -22,7 +22,7 @@ public:
 
     void addMethod (std::string const &, JsonRpcMethod *);
 
-    void invoke (std::string const &, Json::Value const &, JsonRpcCallback *);
+    void invoke (std::string const &, Json::Value const &, std::weak_ptr<JsonRpcCallback>);
 
     void feed (char const *, std::size_t);
     void feed (std::string const &);
@@ -30,7 +30,7 @@ public:
 
 private:
     typedef std::map <std::string, JsonRpcMethod *> methods_type;
-    typedef std::map <Json::Value, JsonRpcCallback *> callbacks_type;
+    typedef std::map <Json::Value, std::weak_ptr<JsonRpcCallback>> callbacks_type;
 
     Json::Value errorResponse
         ( Json::Value const &

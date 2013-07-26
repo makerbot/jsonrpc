@@ -45,10 +45,14 @@ class JsonRpc {
       JsonRpcMethod * const method);
 
   /// Invoke a method on the other endpoint
+  ///
+  /// Note that only a weak reference to the callback is kept. If the
+  /// callback is no longer valid when a response is received, the
+  /// response will be dropped.
   JSONRPC_API void invoke(
       const std::string &methodName,
       const Json::Value &params,
-      JsonRpcCallback * callback = 0);
+      std::weak_ptr<JsonRpcCallback> callback);
 
   /// Input data received from the other endpoint to JsonReader
   JSONRPC_API void feedInput(

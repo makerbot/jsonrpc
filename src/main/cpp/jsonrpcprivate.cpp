@@ -31,7 +31,7 @@ void
 JsonRpcPrivate::invoke
     ( std::string const & methodName
     , Json::Value const & params
-    , JsonRpcCallback * const callback
+    , std::weak_ptr<JsonRpcCallback> callback
     )
 {
     Json::Value request (Json::objectValue);
@@ -39,7 +39,7 @@ JsonRpcPrivate::invoke
     request["method"] = Json::Value (methodName);
     request["params"] = params;
     Json::Value id;
-    if (0 != callback)
+    if (!callback.expired())
     {
         id = Json::Value (this->m_idCounter);
         this->m_idCounter += 1;
@@ -232,9 +232,15 @@ JsonRpcPrivate::handleResponse
     callbacks_type::iterator i (this->m_callbacks.find (id));
     if (i != this->m_callbacks.end ())
     {
-        JsonRpcCallback * const callback (i->second);
+        // Get the shared pointer to the callback
+        auto callback(i->second.lock());
+        // Remove the weak pointer to the callback
         this->m_callbacks.erase (i);
-        callback->response (response);
+        // If the callback is still valid, send the response
+        if (callback)
+        {
+            callback->response (response);
+        }
     }
 }
 
