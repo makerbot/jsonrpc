@@ -11,11 +11,34 @@
 
 #include "jsonrpcprivate.h"
 
-JsonRpcPrivate::JsonRpcPrivate (JsonRpcOutputStream * const output)
-    : m_output (output)
-    , m_jsonReader (* this)
+JsonRpcPrivate::JsonRpcPrivate ()
+    : m_jsonReader (* this)
     , m_idCounter (0)
 {
+}
+
+JsonRpcPrivate::JsonRpcPrivate (
+    const JsonRpcPrivate &other,
+    std::weak_ptr<JsonRpcOutputStream> outputStream)
+    : m_output(outputStream),
+      m_jsonReader (*this),
+      m_methods(other.m_methods),
+      m_idCounter(0) {
+}
+
+JsonRpcPrivate::~JsonRpcPrivate () {
+  for (auto pair : m_callbacks) {
+    auto callback(pair.second.lock());
+    // If the callback is still valid, send error
+    //
+    // TODO(nicholasbishop): for now, just sending a null response,
+    // which should be interpreted as invalid by the callback. Could
+    // look into sending a more "correct" invalid response specified
+    // by the JSON-RPC spec.
+    if (callback) {
+      callback->response(Json::nullValue);
+    }
+  }
 }
 
 void
@@ -55,7 +78,13 @@ JsonRpcPrivate::invoke
     // Send the request
     Json::FastWriter writer;
     std::string const string (writer.write (request));
-    this->m_output->send (string);
+
+    auto output(m_output.lock());
+    if (output) {
+      output->send (string);
+    } else {
+      throw JsonRpcInvalidOutputStream();
+    }
 }
 
 void
@@ -339,7 +368,12 @@ JsonRpcPrivate::jsonReaderCallback (std::string const & jsonText)
     {
         Json::FastWriter writer;
         std::string const string (writer.write (response));
-        this->m_output->send (string);
+
+        auto output(m_output.lock());
+        // Silently fail if there's no output stream
+        if (output) {
+          output->send (string);
+        }
     }
 }
 

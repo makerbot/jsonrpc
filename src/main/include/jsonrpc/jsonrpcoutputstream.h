@@ -9,10 +9,6 @@
 #include <jsoncpp/json/value.h>
 
 /// Abstract interface for sending data to the other endpoint
-///
-/// JsonRpc is given an instance of a subclass of JsonRpcOutputStream
-/// at construction time. That object is used internally to write data
-/// to the other endpoint.
 class JsonRpcOutputStream {
  public:
   JSONRPC_API virtual ~JsonRpcOutputStream();
