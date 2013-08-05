@@ -32,7 +32,8 @@ class JsonRpcPrivate;
 ///
 /// If no output stream is set (which is true after construction, or
 /// if setOutputStream is called with a null pointer, or if the
-/// weak_ptr expires), then 
+/// weak_ptr expires), then a remote method invocation will throw a
+/// JsonRpcInvalidOutputStream exception.
 class JsonRpc {
  public:
   /// Construct JsonRpc object with no output stream
