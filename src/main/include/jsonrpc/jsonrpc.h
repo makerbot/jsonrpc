@@ -43,7 +43,7 @@ class JsonRpc {
   JSONRPC_API ~JsonRpc();
 
   /// Set output stream used for sending data to the other endpoint
-  void setOutputStream(std::weak_ptr<JsonRpcOutputStream> outputStream);
+  JSONRPC_API void setOutputStream(std::weak_ptr<JsonRpcOutputStream> outputStream);
 
   /// Add a client method that the other endpoint can invoke
   JSONRPC_API void addMethod(
