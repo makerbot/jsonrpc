@@ -7,11 +7,16 @@
 #include <cstddef>
 #include <string>
 
-JsonRpc::JsonRpc(JsonRpcOutputStream * const output)
-    : m_private(new JsonRpcPrivate(output)) {
+JsonRpc::JsonRpc()
+    : m_private(new JsonRpcPrivate()) {
 }
 
 JsonRpc::~JsonRpc() {
+}
+
+void JsonRpc::setOutputStream(
+    std::weak_ptr<JsonRpcOutputStream> outputStream) {
+  m_private.reset(new JsonRpcPrivate(*m_private, outputStream));
 }
 
 void JsonRpc::addMethod(

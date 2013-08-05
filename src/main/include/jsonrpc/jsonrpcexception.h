@@ -34,4 +34,9 @@ private:
     Json::Value const m_data;
 };
 
+class JsonRpcInvalidOutputStream : public std::runtime_error {
+ public:
+  JsonRpcInvalidOutputStream();
+};
+
 #endif

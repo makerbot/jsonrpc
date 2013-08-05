@@ -18,7 +18,19 @@
 class JsonRpcPrivate : public JsonRpcStream
 {
 public:
-    JsonRpcPrivate (JsonRpcOutputStream *);
+    JsonRpcPrivate ();
+
+    /// Partial copy constructor
+    ///
+    /// The methods from 'other' are copied and the new outputStream
+    /// is set. Everything else is initialized as with the no-argument
+    /// constructor.
+    JsonRpcPrivate (
+        const JsonRpcPrivate &other,
+        std::weak_ptr<JsonRpcOutputStream> outputStream);
+
+    /// On destruction, send failure to any active callbacks 
+    ~JsonRpcPrivate ();
 
     void addMethod (std::string const &, JsonRpcMethod *);
 
@@ -55,7 +67,7 @@ private:
     Json::Value handleArray (Json::Value const &);
     void jsonReaderCallback (std::string const &);
 
-    JsonRpcOutputStream * const m_output;
+    std::weak_ptr<JsonRpcOutputStream> m_output;
     JsonReader m_jsonReader;
     methods_type m_methods;
     int m_idCounter;

@@ -73,3 +73,7 @@ JsonRpcException::data (void) const
 {
     return this->m_data;
 }
+
+JsonRpcInvalidOutputStream::JsonRpcInvalidOutputStream()
+    : std::runtime_error("Invalid JsonRpcOutputStream") {
+}

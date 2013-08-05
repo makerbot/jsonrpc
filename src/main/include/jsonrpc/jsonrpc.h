@@ -27,17 +27,23 @@ class JsonRpcPrivate;
 /// methods.
 ///
 /// The invoke() method is used to invoke a method on the other
-/// endpoint. The invocation will be sent via the JsonRpcStream
-/// subclass passed in to the constructor.
+/// endpoint. The invocation will be sent via the current
+/// JsonRpcOutputStream object.
+///
+/// If no output stream is set (which is true after construction, or
+/// if setOutputStream is called with a null pointer, or if the
+/// weak_ptr expires), then a remote method invocation will throw a
+/// JsonRpcInvalidOutputStream exception.
 class JsonRpc {
  public:
-  /// Construct JsonRpc object
-  ///
-  /// The 'output' stream is used to send data to the other endpoint.
-  JSONRPC_API JsonRpc(JsonRpcOutputStream * const output);
+  /// Construct JsonRpc object with no output stream
+  JSONRPC_API JsonRpc();
 
   /// Destroy JsonRpc object
   JSONRPC_API ~JsonRpc();
+
+  /// Set output stream used for sending data to the other endpoint
+  void setOutputStream(std::weak_ptr<JsonRpcOutputStream> outputStream);
 
   /// Add a client method that the other endpoint can invoke
   JSONRPC_API void addMethod(
@@ -49,6 +55,9 @@ class JsonRpc {
   /// Note that only a weak reference to the callback is kept. If the
   /// callback is no longer valid when a response is received, the
   /// response will be dropped.
+  ///
+  /// If the current output stream is invalid, an InvalidOutputStream
+  /// exception is thrown.
   JSONRPC_API void invoke(
       const std::string &methodName,
       const Json::Value &params,
