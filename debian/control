@@ -11,7 +11,7 @@ Homepage: https://github.com/makerbot/json-cpp
 Package: mb-libjsonrpc
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, mb-libstdc++6
 Description: MakerBot RPC JSON library runtime shared object
 
 Package: mb-libjsonrpc-dev
