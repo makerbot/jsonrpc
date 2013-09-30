@@ -5,7 +5,6 @@
 
 #include <jsoncpp/json/value.h>
 
-#include <jsonrpc/jsonrpcconfig.h>
 #include <jsonrpc/jsonrpccallback.h>
 #include <jsonrpc/jsonrpcmethod.h>
 #include <jsonrpc/jsonrpcoutputstream.h>

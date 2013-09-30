@@ -4,7 +4,6 @@
 #define JSONRPC_JSONRPCCALLBACK_H (1)
 
 #include <jsoncpp/json/value.h>
-#include <jsonrpc/jsonrpcconfig.h>
 
 class JsonRpcCallback
 {

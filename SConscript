@@ -5,7 +5,6 @@ import os
 env = Environment(ENV=os.environ, tools=['default', 'mb_install'])
 
 env.MBAddStandardCompilerFlags()
-env.MBAddWindowsDLLBuildFlag('JSONRPC_DLL_BUILD')
 
 env.MBAddIncludePaths([Dir('src/main/include/')])
 
