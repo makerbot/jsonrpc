@@ -5,7 +5,6 @@
 
 #include <string>
 
-#include <jsonrpc/jsonrpcconfig.h>
 #include <jsoncpp/json/value.h>
 
 /// Abstract interface for sending data to the other endpoint

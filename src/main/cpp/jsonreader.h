@@ -7,7 +7,6 @@
 #include <sstream>
 #include <stack>
 
-#include <jsonrpc/jsonrpcconfig.h>
 #include <jsonrpc/jsonrpc.h>
 #include <jsonrpc/jsonrpcstream.h>
 

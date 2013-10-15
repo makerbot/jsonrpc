@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <string>
 
-#include <jsonrpc/jsonrpcconfig.h>
 #include <jsoncpp/json/value.h>
 
 class JsonRpcStream
