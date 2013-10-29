@@ -1,11 +1,11 @@
 // vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
 
+#include <cstdio>
 #include <string>
 
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
 #include <jsoncpp/json/writer.h>
-
 #include <jsonrpc/jsonrpcmethod.h>
 #include <jsonrpc/jsonrpcstream.h>
 
@@ -214,6 +214,16 @@ JsonRpcPrivate::successResponse
     return response;
 }
 
+/// Return true if a request is a notification
+///
+/// Precondition: request must be a valid request.
+///
+/// Notifications are ordinary requests except they do not have a
+/// valid ID.
+static bool isNotification(const Json::Value &request) {
+  return (!request.isMember("id") || request["id"].isNull());
+}
+
 Json::Value JsonRpcPrivate::handleRequest(
     const Json::Value &request,
     const Json::Value &id) {
@@ -231,14 +241,25 @@ Json::Value JsonRpcPrivate::handleRequest(
         request["params"] :
         Json::objectValue);
 
-    try {
-      return successResponse(id, method->invoke(params));
-    } catch (const JsonRpcException &exception) {
-      return errorResponse(
-          id,
-          exception.code(),
-          exception.message(),
-          exception.data());
+    if (isNotification(request)) {
+      // Notifications are requests that do not get a response
+      try {
+        method->invoke(params);
+      } catch (const std::exception &e) {
+        // No logging here, dump directly to stdout
+        fprintf(stderr, "exception from notification handler: %s\n", e.what());
+      }
+      return Json::nullValue;
+    } else {
+      try {
+        return successResponse(id, method->invoke(params));
+      } catch (const JsonRpcException &exception) {
+        return errorResponse(
+            id,
+            exception.code(),
+            exception.message(),
+            exception.data());
+      }
     }
   }
 }
