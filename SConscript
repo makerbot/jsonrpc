@@ -6,7 +6,9 @@ env = Environment(ENV=os.environ, tools=['default', 'mb_install'])
 
 env.MBAddStandardCompilerFlags()
 
-env.MBAddIncludePaths([Dir('src/main/include/')])
+env.MBAddIncludePaths([
+    Dir('src/main/include/'),
+    Dir('src/main/')])
 
 env.MBDependsOnJsonCpp()
 

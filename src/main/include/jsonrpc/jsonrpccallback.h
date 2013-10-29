@@ -1,15 +1,14 @@
-// vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
+// Copyright 2013 MakerBot Industries
 
-#ifndef JSONRPC_JSONRPCCALLBACK_H
-#define JSONRPC_JSONRPCCALLBACK_H (1)
+#ifndef SRC_MAIN_INCLUDE_JSONRPC_JSONRPCCALLBACK_H_
+#define SRC_MAIN_INCLUDE_JSONRPC_JSONRPCCALLBACK_H_
 
 #include <jsoncpp/json/value.h>
 
-class JsonRpcCallback
-{
-public:
-    JSONRPC_API virtual ~JsonRpcCallback (void);
-    JSONRPC_API virtual void response (Json::Value const & response) = 0;
+class JsonRpcCallback {
+ public:
+  JSONRPC_API virtual ~JsonRpcCallback();
+  JSONRPC_API virtual void response(Json::Value const & response) = 0;
 };
 
-#endif
+#endif  // SRC_MAIN_INCLUDE_JSONRPC_JSONRPCCALLBACK_H_

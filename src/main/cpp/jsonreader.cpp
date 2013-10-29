@@ -1,161 +1,102 @@
-// vim:cindent:cino=\:0:et:ff=unix:fileencoding=utf-8:sw=4:ts=4:
-// jsonrpc/src/main/cpp/jsonreader.h
-//
-// jsonrpc - JSON-RPC 2.0 for QT
-// Copyright © 2012 Matthew W. Samsonoff <matthew.samsonoff@makerbot.com>
-//
-// This program is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Affero General Public License as published by the
-// Free Software Foundation, either version 3 of the License, or (at your
-// option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT
-// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-// FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
-// for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
+// Copyright 2013 MakerBot Industries
 
 #include <string>
 
-#include <jsonrpc/jsonrpc.h>
+#include "cpp/jsonrpcprivate.h"
+#include "cpp/jsonreader.h"
+#include "jsonrpc/jsonrpc.h"
 
-#include "jsonrpcprivate.h"
-#include "jsonreader.h"
-
-JsonReader::JsonReader (JsonRpcPrivate & jsonRpcPrivate)
-    : m_jsonRpcPrivate (jsonRpcPrivate)
-    , m_state (S0)
-{
+JsonReader::JsonReader(JsonRpcPrivate & jsonRpcPrivate)
+    : m_jsonRpcPrivate(jsonRpcPrivate)
+    , m_state(S0) {
 }
 
-void
-JsonReader::reset (void)
-{
-    this->m_state = S0;
-    this->m_buffer.str (std::string ());
+void JsonReader::reset() {
+  m_state = S0;
+  m_buffer.str(std::string());
 
-    while (!this->m_stack.empty ())
-    {
-        this->m_stack.pop ();
-    }
+  while (!m_stack.empty()) {
+    m_stack.pop();
+  }
 }
 
-void
-JsonReader::send (void)
-{
-    std::string const jsonText (this->m_buffer.str ());
-    this->reset ();
-    if (!jsonText.empty ())
-    {
-        this->m_jsonRpcPrivate.jsonReaderCallback (jsonText);
-    }
+void JsonReader::send() {
+  std::string const jsonText(m_buffer.str());
+  reset();
+  if (!jsonText.empty()) {
+    m_jsonRpcPrivate.jsonReaderCallback(jsonText);
+  }
 }
 
-void
-JsonReader::transition (char const ch)
-{
-    switch (this->m_state)
-    {
+void JsonReader::transition(char const ch) {
+  switch (m_state) {
     case S0:
-        if ('{' == ch || '[' == ch)
-        {
-            this->m_state = S1;
-            this->m_stack.push (ch);
-        }
-        else
-        if (' ' != ch || '\t' != ch || '\n' != ch || '\r' != ch)
-        {
-            this->send ();
-        }
-        break;
+      if ('{' == ch || '[' == ch) {
+        m_state = S1;
+        m_stack.push(ch);
+      } else if (' ' != ch || '\t' != ch || '\n' != ch || '\r' != ch) {
+        send();
+      }
+      break;
 
     case S1:
-        if ('\"' == ch)
-        {
-            this->m_state = S2;
+      if ('\"' == ch) {
+        m_state = S2;
+      } else if ('{' == ch || '[' == ch) {
+        m_stack.push(ch);
+      } else if ('}' == ch || ']' == ch) {
+        bool send(false);
+        if (m_stack.empty()) {
+          send = true;
+        } else {
+          char const firstch(m_stack.top());
+          m_stack.pop();
+          if (('{' == firstch && '}' != ch)
+              ||('[' == firstch && ']' != ch)) {
+            send = true;
+          } else {
+            send = m_stack.empty();
+          }
         }
-        else
-        if ('{' == ch || '[' == ch)
-        {
-            this->m_stack.push (ch);
+
+        if (send) {
+          this->send();
         }
-        else
-        if ('}' == ch || ']' == ch)
-        {
-            bool send (false);
-            if (this->m_stack.empty ())
-            {
-                send = true;
-            }
-            else
-            {
-                char const firstch (this->m_stack.top ());
-                this->m_stack.pop ();
-                if (('{' == firstch && '}' != ch)
-                    || ('[' == firstch && ']' != ch))
-                {
-                    send = true;
-                }
-                else
-                {
-                    send = this->m_stack.empty ();
-                }
-            }
-            if (send)
-            {
-                this->send ();
-            }
-        }
-        break;
+      }
+      break;
 
     case S2:
-        if ('\"' == ch)
-        {
-            this->m_state = S1;
-        }
-        else
-        if ('\\' == ch)
-        {
-            this->m_state = S3;
-        }
-        break;
+      if ('\"' == ch) {
+        m_state = S1;
+      } else if ('\\' == ch) {
+        m_state = S3;
+      }
+      break;
 
     case S3:
-        this->m_state = S2;
-        break;
-    }
+      m_state = S2;
+      break;
+  }
 }
 
-void
-JsonReader::feed (char ch)
-{
-    this->m_buffer << ch;
-    this->transition (ch);
+void JsonReader::feed(char ch) {
+  m_buffer << ch;
+  transition(ch);
 }
 
-void
-JsonReader::feed (char const * const buffer, std::size_t const length)
-{
-    for (std::size_t i (static_cast <std::size_t> (0u)); i < length; ++i)
-    {
-        char const ch (buffer[i]);
-        this->feed (ch);
-    }
+void JsonReader::feed(char const * const buffer, std::size_t const length) {
+  for (std::size_t i(static_cast <std::size_t>(0u)); i < length; ++i) {
+    char const ch(buffer[i]);
+    feed(ch);
+  }
 }
 
-void
-JsonReader::feed (std::string const & str)
-{
-    for (std::string::const_iterator i (str.begin ()); i != str.end (); ++i)
-    {
-        this->feed (* i);
-    }
+void JsonReader::feed(std::string const & str) {
+  for (std::string::const_iterator i(str.begin()); i != str.end(); ++i) {
+    feed(* i);
+  }
 }
 
-void
-JsonReader::feedeof (void)
-{
-    this->send ();
+void JsonReader::feedeof() {
+  send();
 }

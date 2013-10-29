@@ -1,15 +1,14 @@
-// vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
+// Copyright 2013 MakerBot Industries
 
-#ifndef JSONRPC_JSONRPCMETHOD_H
-#define JSONRPC_JSONRPCMETHOD_H (1)
+#ifndef SRC_MAIN_INCLUDE_JSONRPC_JSONRPCMETHOD_H_
+#define SRC_MAIN_INCLUDE_JSONRPC_JSONRPCMETHOD_H_
 
-#include <jsoncpp/json/value.h>
+#include "jsoncpp/json/value.h"
 
-class JsonRpcMethod
-{
-public:
-    JSONRPC_API virtual ~JsonRpcMethod (void);
-    JSONRPC_API virtual Json::Value invoke (Json::Value const & params) = 0;
+class JsonRpcMethod {
+ public:
+  JSONRPC_API virtual ~JsonRpcMethod(void);
+  JSONRPC_API virtual Json::Value invoke(Json::Value const & params) = 0;
 };
 
-#endif
+#endif  // SRC_MAIN_INCLUDE_JSONRPC_JSONRPCMETHOD_H_

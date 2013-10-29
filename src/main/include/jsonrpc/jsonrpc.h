@@ -1,7 +1,7 @@
 // Copyright 2013 MakerBot Industries
 
-#ifndef JSONRPC_JSONRPC_H_
-#define JSONRPC_JSONRPC_H_
+#ifndef SRC_MAIN_INCLUDE_JSONRPC_JSONRPC_H_
+#define SRC_MAIN_INCLUDE_JSONRPC_JSONRPC_H_
 
 #include <jsoncpp/json/value.h>
 
@@ -42,7 +42,8 @@ class JsonRpc {
   JSONRPC_API ~JsonRpc();
 
   /// Set output stream used for sending data to the other endpoint
-  JSONRPC_API void setOutputStream(std::weak_ptr<JsonRpcOutputStream> outputStream);
+  JSONRPC_API void setOutputStream(
+      std::weak_ptr<JsonRpcOutputStream> outputStream);
 
   /// Add a client method that the other endpoint can invoke
   JSONRPC_API void addMethod(
@@ -74,11 +75,11 @@ class JsonRpc {
   JSONRPC_API void feedEOF();
 
  private:
-  JsonRpc(JsonRpc const &);
+  JsonRpc(const JsonRpc &other);
 
   JsonRpc &operator=(const JsonRpc &);
 
   std::unique_ptr<JsonRpcPrivate> m_private;
 };
 
-#endif  // JSONRPC_JSONRPC_H_
+#endif  // SRC_MAIN_INCLUDE_JSONRPC_JSONRPC_H_

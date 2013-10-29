@@ -1,7 +1,6 @@
-// vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
+// Copyright 2013 MakerBot Industries
 
-#include <jsonrpc/jsonrpccallback.h>
+#include "jsonrpc/jsonrpccallback.h"
 
-JsonRpcCallback::~JsonRpcCallback (void)
-{
+JsonRpcCallback::~JsonRpcCallback() {
 }

@@ -1,84 +1,82 @@
-// vim:cindent:cino=\:0:et:fenc=utf-8:ff=unix:sw=4:ts=4:
+// Copyright 2013 MakerBot Industries
 
-#ifndef JSONRPC_JSONRPCPRIVATE_H
-#define JSONRPC_JSONRPCPRIVATE_H (1)
+#ifndef SRC_MAIN_CPP_JSONRPCPRIVATE_H_
+#define SRC_MAIN_CPP_JSONRPCPRIVATE_H_
 
 #include <cstddef>
 #include <map>
 #include <string>
 
-#include <jsoncpp/json/value.h>
+#include "cpp/jsonreader.h"
+#include "jsoncpp/json/value.h"
+#include "jsonrpc/jsonrpcexception.h"
+#include "jsonrpc/jsonrpcmethod.h"
+#include "jsonrpc/jsonrpcstream.h"
 
-#include <jsonrpc/jsonrpcexception.h>
-#include <jsonrpc/jsonrpcmethod.h>
-#include <jsonrpc/jsonrpcstream.h>
+class JsonRpcPrivate : public JsonRpcStream {
+ public:
+  JsonRpcPrivate();
 
-#include "jsonreader.h"
+  /// Partial copy constructor
+  ///
+  /// The methods from 'other' are copied and the new outputStream
+  /// is set. Everything else is initialized as with the no-argument
+  /// constructor.
+  JsonRpcPrivate(
+      const JsonRpcPrivate &other,
+      std::weak_ptr<JsonRpcOutputStream> outputStream);
 
-class JsonRpcPrivate : public JsonRpcStream
-{
-public:
-    JsonRpcPrivate ();
+  /// On destruction, send failure to any active callbacks
+  ~JsonRpcPrivate();
 
-    /// Partial copy constructor
-    ///
-    /// The methods from 'other' are copied and the new outputStream
-    /// is set. Everything else is initialized as with the no-argument
-    /// constructor.
-    JsonRpcPrivate (
-        const JsonRpcPrivate &other,
-        std::weak_ptr<JsonRpcOutputStream> outputStream);
+  void addMethod(std::string const &, JsonRpcMethod *);
 
-    /// On destruction, send failure to any active callbacks 
-    ~JsonRpcPrivate ();
+  void invoke(
+      std::string const &,
+      Json::Value const &,
+      std::weak_ptr<JsonRpcCallback>);
 
-    void addMethod (std::string const &, JsonRpcMethod *);
+  void feed(char const *, std::size_t);
+  void feed(std::string const &);
+  void feedeof();
 
-    void invoke (std::string const &, Json::Value const &, std::weak_ptr<JsonRpcCallback>);
+ private:
+  typedef std::map <std::string, JsonRpcMethod *> methods_type;
+  typedef std::map <Json::Value, std::weak_ptr<JsonRpcCallback>> callbacks_type;
 
-    void feed (char const *, std::size_t);
-    void feed (std::string const &);
-    void feedeof (void);
+  Json::Value errorResponse(
+      Json::Value const &,
+      int,
+      std::string const &,
+      Json::Value const &) const;
+  Json::Value invalidRequest(Json::Value const &) const;
+  Json::Value methodNotFound(Json::Value const &) const;
+  Json::Value parseError() const;
+  bool isRequest(Json::Value const &);
+  bool isSuccessResponse(Json::Value const &);
+  bool isErrorResponse(Json::Value const &);
+  bool isResponse(Json::Value const &);
+  Json::Value successResponse(
+      Json::Value const &,
+      Json::Value const &) const;
+  Json::Value handleRequest(Json::Value const &, Json::Value const &);
+  void handleResponse(Json::Value const &, Json::Value const &);
+  Json::Value handleObject(Json::Value const &);
+  Json::Value handleArray(Json::Value const &);
+  void jsonReaderCallback(std::string const &);
 
-private:
-    typedef std::map <std::string, JsonRpcMethod *> methods_type;
-    typedef std::map <Json::Value, std::weak_ptr<JsonRpcCallback>> callbacks_type;
+  std::weak_ptr<JsonRpcOutputStream> m_output;
+  JsonReader m_jsonReader;
+  methods_type m_methods;
+  int m_idCounter;
+  callbacks_type m_callbacks;
 
-    Json::Value errorResponse
-        ( Json::Value const &
-        , int
-        , std::string const &
-        , Json::Value const &
-        ) const;
-    Json::Value invalidRequest (Json::Value const &) const;
-    Json::Value methodNotFound (Json::Value const &) const;
-    Json::Value parseError (void) const;
-    bool isRequest (Json::Value const &);
-    bool isSuccessResponse (Json::Value const &);
-    bool isErrorResponse (Json::Value const &);
-    bool isResponse (Json::Value const &);
-    Json::Value successResponse
-        ( Json::Value const &
-        , Json::Value const &
-        ) const;
-    Json::Value handleRequest (Json::Value const &, Json::Value const &);
-    void handleResponse (Json::Value const &, Json::Value const &);
-    Json::Value handleObject (Json::Value const &);
-    Json::Value handleArray (Json::Value const &);
-    void jsonReaderCallback (std::string const &);
+  friend class JsonReader;
 
-    std::weak_ptr<JsonRpcOutputStream> m_output;
-    JsonReader m_jsonReader;
-    methods_type m_methods;
-    int m_idCounter;
-    callbacks_type m_callbacks;
+  // Disable copy constructor and assignment
 
-    friend class JsonReader;
-
-    // Disable copy constructor and assignment
-
-    JsonRpcPrivate (JsonRpcPrivate const &);
-    JsonRpcPrivate & operator= (JsonRpcPrivate const &);
+  JsonRpcPrivate(const JsonRpcPrivate &other);
+  JsonRpcPrivate & operator=(JsonRpcPrivate const &);
 };
 
-#endif
+#endif  // SRC_MAIN_CPP_JSONRPCPRIVATE_H_
