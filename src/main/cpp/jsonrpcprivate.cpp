@@ -41,7 +41,7 @@ JsonRpcPrivate::~JsonRpcPrivate() {
 
 void JsonRpcPrivate::addMethod(
     std::string const & name,
-    JsonRpcMethod * const method) {
+    std::weak_ptr<JsonRpcMethod> method) {
   m_methods[name] = method;
 }
 
@@ -186,33 +186,42 @@ Json::Value JsonRpcPrivate::handleRequest(
   if (iter == m_methods.end()) {
     return methodNotFound(id);
   } else {
-    auto method(iter->second);
+    auto wp_method(iter->second);
 
-    // Params member may be omitted according to the JSON-RPC 2.0 spec
-    Json::Value params(
-        request.isMember("params") ?
-        request["params"] :
-        Json::objectValue);
+    if (auto method = wp_method.lock()) {
+      // Params member may be omitted according to the JSON-RPC 2.0 spec
+      Json::Value params(
+          request.isMember("params") ?
+          request["params"] :
+          Json::objectValue);
 
-    if (isNotification(request)) {
-      // Notifications are requests that do not get a response
-      try {
-        method->invoke(params);
-      } catch (const std::exception &e) {
-        // No logging here, dump directly to stdout
-        fprintf(stderr, "exception from notification handler: %s\n", e.what());
+      if (isNotification(request)) {
+        // Notifications are requests that do not get a response
+        try {
+          method->invoke(params);
+        } catch (const std::exception &e) {
+          // No logging here, dump directly to stdout
+          fprintf(
+              stderr,
+              "exception from notification handler: %s\n",
+              e.what());
+        }
+        return Json::nullValue;
+      } else {
+        try {
+          return successResponse(id, method->invoke(params));
+        } catch (const JsonRpcException &exception) {
+          return errorResponse(
+              id,
+              exception.code(),
+              exception.message(),
+              exception.data());
+        }
       }
-      return Json::nullValue;
     } else {
-      try {
-        return successResponse(id, method->invoke(params));
-      } catch (const JsonRpcException &exception) {
-        return errorResponse(
-            id,
-            exception.code(),
-            exception.message(),
-            exception.data());
-      }
+      // Method was deleted, nothing useful to do (could delete the
+      // weak_ptr, but not bothering for now)
+      return Json::nullValue;
     }
   }
 }

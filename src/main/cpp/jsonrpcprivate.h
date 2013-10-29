@@ -29,7 +29,9 @@ class JsonRpcPrivate : public JsonRpcStream {
   /// On destruction, send failure to any active callbacks
   ~JsonRpcPrivate();
 
-  void addMethod(std::string const &, JsonRpcMethod *);
+  void addMethod(
+      std::string const &name,
+      std::weak_ptr<JsonRpcMethod> method);
 
   void invoke(
       std::string const &,
@@ -41,7 +43,7 @@ class JsonRpcPrivate : public JsonRpcStream {
   void feedeof();
 
  private:
-  typedef std::map <std::string, JsonRpcMethod *> methods_type;
+  typedef std::map <std::string, std::weak_ptr<JsonRpcMethod>> methods_type;
   typedef std::map <Json::Value, std::weak_ptr<JsonRpcCallback>> callbacks_type;
 
   Json::Value errorResponse(

@@ -20,7 +20,7 @@ void JsonRpc::setOutputStream(
 
 void JsonRpc::addMethod(
     const std::string &methodName,
-    JsonRpcMethod * const method) {
+    std::weak_ptr<JsonRpcMethod> method) {
   m_private->addMethod(methodName, method);
 }
 

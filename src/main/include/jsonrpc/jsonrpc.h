@@ -48,7 +48,7 @@ class JsonRpc {
   /// Add a client method that the other endpoint can invoke
   JSONRPC_API void addMethod(
       const std::string &methodName,
-      JsonRpcMethod * const method);
+      std::weak_ptr<JsonRpcMethod> method);
 
   /// Invoke a method on the other endpoint
   ///
