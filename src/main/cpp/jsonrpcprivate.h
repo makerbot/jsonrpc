@@ -43,9 +43,6 @@ class JsonRpcPrivate : public JsonRpcStream {
   void feedeof();
 
  private:
-  typedef std::map <std::string, std::weak_ptr<JsonRpcMethod>> methods_type;
-  typedef std::map <Json::Value, std::weak_ptr<JsonRpcCallback>> callbacks_type;
-
   Json::Value errorResponse(
       Json::Value const &,
       int,
@@ -69,9 +66,11 @@ class JsonRpcPrivate : public JsonRpcStream {
 
   std::weak_ptr<JsonRpcOutputStream> m_output;
   JsonReader m_jsonReader;
-  methods_type m_methods;
+
+  std::map<std::string, std::weak_ptr<JsonRpcMethod>> m_methods;
+
   int m_idCounter;
-  callbacks_type m_callbacks;
+  std::map<Json::Value, std::weak_ptr<JsonRpcCallback>> m_callbacks;
 
   friend class JsonReader;
 

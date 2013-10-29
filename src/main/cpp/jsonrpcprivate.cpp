@@ -200,6 +200,7 @@ Json::Value JsonRpcPrivate::handleRequest(
         try {
           method->invoke(params);
         } catch (const std::exception &e) {
+          // NOLINT
           // No logging here, dump directly to stdout
           fprintf(
               stderr,
@@ -211,6 +212,7 @@ Json::Value JsonRpcPrivate::handleRequest(
         try {
           return successResponse(id, method->invoke(params));
         } catch (const JsonRpcException &exception) {
+          // NOLINT
           return errorResponse(
               id,
               exception.code(),
@@ -229,7 +231,7 @@ Json::Value JsonRpcPrivate::handleRequest(
 void JsonRpcPrivate::handleResponse(
     const Json::Value &response,
     const Json::Value &id) {
-  callbacks_type::iterator i(m_callbacks.find(id));
+  auto i(m_callbacks.find(id));
   if (i != m_callbacks.end()) {
     // Get the shared pointer to the callback
     auto callback(i->second.lock());
