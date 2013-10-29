@@ -214,42 +214,33 @@ JsonRpcPrivate::successResponse
     return response;
 }
 
-Json::Value
-JsonRpcPrivate::handleRequest
-    ( Json::Value const & request
-    , Json::Value const & id
-    )
-{
-    std::string const methodName (request["method"].asString ());
-    methods_type::const_iterator const i (this->m_methods.find (methodName));
-    Json::Value response;
-    if (i == this->m_methods.end ())
-    {
-        response = this->methodNotFound (id);
+Json::Value JsonRpcPrivate::handleRequest(
+    const Json::Value &request,
+    const Json::Value &id) {
+  const std::string methodName(request["method"].asString());
+  const auto iter(m_methods.find(methodName));
+
+  if (iter == m_methods.end()) {
+    return methodNotFound(id);
+  } else {
+    auto method(iter->second);
+
+    // Params member may be omitted according to the JSON-RPC 2.0 spec
+    Json::Value params(
+        request.isMember("params") ?
+        request["params"] :
+        Json::objectValue);
+
+    try {
+      return successResponse(id, method->invoke(params));
+    } catch (const JsonRpcException &exception) {
+      return errorResponse(
+          id,
+          exception.code(),
+          exception.message(),
+          exception.data());
     }
-    else
-    {
-        JsonRpcMethod * const method (i->second);
-        Json::Value params;
-        if (request.isMember ("params"))
-        {
-            params = request["params"];
-        }
-        try
-        {
-            response = this->successResponse (id, method->invoke (params));
-        }
-        catch (JsonRpcException const & exception)
-        {
-            response = this->errorResponse
-                ( id
-                , exception.code ()
-                , exception.message ()
-                , exception.data ()
-                );
-        }
-    }
-    return response;
+  }
 }
 
 void
