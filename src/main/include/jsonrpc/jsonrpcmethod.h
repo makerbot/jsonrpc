@@ -19,12 +19,12 @@ class JsonRpcMethod {
   /// and send a response at some later time.
   class Response {
    public:
-    Response(JsonRpcPrivate *jsonRpcPrivate, const Json::Value &id);
+    JSONRPC_API Response(JsonRpcPrivate *jsonRpcPrivate, const Json::Value &id);
 
-    ~Response();
+    JSONRPC_API ~Response();
 
     /// Get the original request ID
-    Json::Value id() const;
+    JSONRPC_API Json::Value id() const;
 
     /// Send a successful response
     ///
@@ -41,14 +41,14 @@ class JsonRpcMethod {
     /// Close the response so that it never gets sent
     ///
     /// This is used if the connection dies.
-    void invalidate();
+    JSONRPC_API void invalidate();
 
    private:
     class Private;
     std::unique_ptr<Private> m_private;
   };
 
-  virtual ~JsonRpcMethod();
+  JSONRPC_API virtual ~JsonRpcMethod();
 
   /// Handle a request
   ///
@@ -68,13 +68,13 @@ class JsonRpcMethod {
 /// override of invoke() that does not take a response parameter.
 class JsonRpcNotification : public JsonRpcMethod {
  public:
-  virtual ~JsonRpcNotification();
+  JSONRPC_API virtual ~JsonRpcNotification();
 
   /// Handle a request
   JSONRPC_API virtual void invoke(const Json::Value &params) = 0;
 
   /// Call the other invoke() override without the response
-  virtual void invoke(
+  JSONRPC_API virtual void invoke(
       const Json::Value &params,
       std::shared_ptr<Response> response) override;
 };
