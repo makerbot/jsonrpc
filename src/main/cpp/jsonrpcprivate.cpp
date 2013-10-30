@@ -1,5 +1,6 @@
 // Copyright 2013 MakerBot Industries
 
+#include <algorithm>
 #include <cstdio>
 #include <string>
 
@@ -37,12 +38,27 @@ JsonRpcPrivate::~JsonRpcPrivate() {
       callback->response(Json::nullValue);
     }
   }
+
+  for (auto r : m_methodResponses) {
+    r->invalidate();
+  }
 }
 
 void JsonRpcPrivate::addMethod(
     std::string const & name,
     std::weak_ptr<JsonRpcMethod> method) {
   m_methods[name] = method;
+}
+
+/// Serialize the JSON and try to send it, throw an exception on failure
+static void serializeAndSendJson(
+    const Json::Value &json,
+    std::weak_ptr<JsonRpcOutputStream> wp_output) {
+  if (auto output = wp_output.lock()) {
+    output->send(Json::FastWriter().write(json));
+  } else {
+    throw JsonRpcInvalidOutputStream();
+  }
 }
 
 void JsonRpcPrivate::invoke(
@@ -65,16 +81,7 @@ void JsonRpcPrivate::invoke(
     }
   }
 
-  // Send the request
-  Json::FastWriter writer;
-  std::string const string(writer.write(request));
-
-  auto output(m_output.lock());
-  if (output) {
-    output->send(string);
-  } else {
-    throw JsonRpcInvalidOutputStream();
-  }
+  serializeAndSendJson(request, m_output);
 }
 
 void JsonRpcPrivate::feed(char const * const buffer, std::size_t const length) {
@@ -87,6 +94,43 @@ void JsonRpcPrivate::feed(std::string const & buffer) {
 
 void JsonRpcPrivate::feedeof() {
   m_jsonReader.feedeof();
+}
+
+void JsonRpcPrivate::sendResponseSuccess(
+    JsonRpcMethod::Response &response,
+    const Json::Value &result) {
+  sendFormattedResponse(
+      response,
+      successResponse(response.id(), result));
+}
+
+void JsonRpcPrivate::sendResponseError(
+    JsonRpcMethod::Response &response,
+    const Json::Value &error) {
+  sendFormattedResponse(
+      response,
+      errorResponse(
+          response.id(),
+          -32603,
+          "error in client method",
+          error));
+}
+
+void JsonRpcPrivate::sendFormattedResponse(
+    JsonRpcMethod::Response &response,
+    const Json::Value &formattedResponse) {
+  auto iter(std::find_if(
+      m_methodResponses.begin(),
+      m_methodResponses.end(),
+      [&response](const std::shared_ptr<JsonRpcMethod::Response> &elem) {
+        return (&response == elem.get());
+      }));
+  if (iter == m_methodResponses.end()) {
+    throw std::runtime_error("Unregistered Response object");
+  } else {
+    m_methodResponses.erase(iter);
+    serializeAndSendJson(formattedResponse, m_output);
+  }
 }
 
 Json::Value JsonRpcPrivate::errorResponse(
@@ -198,7 +242,7 @@ Json::Value JsonRpcPrivate::handleRequest(
       if (isNotification(request)) {
         // Notifications are requests that do not get a response
         try {
-          method->invoke(params);
+          method->invoke(params, nullptr);
         } catch (const std::exception &e) {
           // NOLINT
           // No logging here, dump directly to stdout
@@ -209,15 +253,21 @@ Json::Value JsonRpcPrivate::handleRequest(
         }
         return Json::nullValue;
       } else {
+        const auto response(
+            std::make_shared<JsonRpcMethod::Response>(this, id));
+        m_methodResponses.emplace_back(response);
         try {
-          return successResponse(id, method->invoke(params));
-        } catch (const JsonRpcException &exception) {
+          method->invoke(params, response);
+          return Json::nullValue;
+        } catch (const std::exception &e) {
           // NOLINT
+
+          // Failed to invoke the method; send a default error
           return errorResponse(
               id,
-              exception.code(),
-              exception.message(),
-              exception.data());
+              -32603,
+              "exception in method",
+              e.what());
         }
       }
     } else {
@@ -304,13 +354,14 @@ void JsonRpcPrivate::jsonReaderCallback(std::string const & jsonText) {
   }
 
   if (!response.isNull()) {
-    Json::FastWriter writer;
-    std::string const string(writer.write(response));
-
-    auto output(m_output.lock());
-    // Silently fail if there's no output stream
-    if (output) {
-      output->send(string);
+    try {
+      serializeAndSendJson(response, m_output);
+    } catch (const std::exception &e) {
+      // NOLINT
+      fprintf(
+          stderr,
+          "exception sending response: %s\n",
+          e.what());
     }
   }
 }

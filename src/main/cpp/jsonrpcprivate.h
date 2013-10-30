@@ -4,6 +4,7 @@
 #define SRC_MAIN_CPP_JSONRPCPRIVATE_H_
 
 #include <cstddef>
+#include <list>
 #include <map>
 #include <string>
 
@@ -42,6 +43,14 @@ class JsonRpcPrivate : public JsonRpcStream {
   void feed(std::string const &);
   void feedeof();
 
+  void sendResponseSuccess(
+      JsonRpcMethod::Response &response,
+      const Json::Value &result);
+
+  void sendResponseError(
+      JsonRpcMethod::Response &response,
+      const Json::Value &error);
+
  private:
   Json::Value errorResponse(
       Json::Value const &,
@@ -64,6 +73,10 @@ class JsonRpcPrivate : public JsonRpcStream {
   Json::Value handleArray(Json::Value const &);
   void jsonReaderCallback(std::string const &);
 
+  void sendFormattedResponse(
+      JsonRpcMethod::Response &response,
+      const Json::Value &formattedResponse);
+
   std::weak_ptr<JsonRpcOutputStream> m_output;
   JsonReader m_jsonReader;
 
@@ -71,6 +84,13 @@ class JsonRpcPrivate : public JsonRpcStream {
 
   int m_idCounter;
   std::map<Json::Value, std::weak_ptr<JsonRpcCallback>> m_callbacks;
+
+  /// Collection of all method responses that haven't been sent yet
+  ///
+  /// This is used at destruction time to safely invalidate the
+  /// responses so that the client can't try to send a response after
+  /// the connection has changed and hit a dangling JsonRpc reference.
+  std::list<std::shared_ptr<JsonRpcMethod::Response>> m_methodResponses;
 
   friend class JsonReader;
 
