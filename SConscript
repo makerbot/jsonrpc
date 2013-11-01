@@ -12,7 +12,6 @@ env.MBAddIncludePaths([
 
 env.MBDependsOnJsonCpp()
 
-env.MBSetLibSymName('jsonrpc')
 libjsonrpc = env.MBSharedLibrary(
     'jsonrpc', [
         Glob('src/main/cpp/*.cpp'),])
