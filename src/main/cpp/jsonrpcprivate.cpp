@@ -26,16 +26,19 @@ JsonRpcPrivate::JsonRpcPrivate(
 }
 
 JsonRpcPrivate::~JsonRpcPrivate() {
-  for (auto pair : m_callbacks) {
-    auto callback(pair.second.lock());
-    // If the callback is still valid, send error
-    //
-    // TODO(nicholasbishop): for now, just sending a null response,
-    // which should be interpreted as invalid by the callback. Could
-    // look into sending a more "correct" invalid response specified
-    // by the JSON-RPC spec.
-    if (callback) {
-      callback->response(Json::nullValue);
+  {
+    const std::lock_guard<std::mutex> lock(m_callbacksMutex);
+    for (auto pair : m_callbacks) {
+      auto callback(pair.second.lock());
+      // If the callback is still valid, send error
+      //
+      // TODO(nicholasbishop): for now, just sending a null response,
+      // which should be interpreted as invalid by the callback. Could
+      // look into sending a more "correct" invalid response specified
+      // by the JSON-RPC spec.
+      if (callback) {
+        callback->response(Json::nullValue);
+      }
     }
   }
 
@@ -77,6 +80,7 @@ void JsonRpcPrivate::invoke(
 
     // Add callback to handle the response
     if (!id.isNull()) {
+      std::lock_guard<std::mutex> lock(m_callbacksMutex);
       m_callbacks[id] = callback;
     }
   }
@@ -281,16 +285,24 @@ Json::Value JsonRpcPrivate::handleRequest(
 void JsonRpcPrivate::handleResponse(
     const Json::Value &response,
     const Json::Value &id) {
-  auto i(m_callbacks.find(id));
-  if (i != m_callbacks.end()) {
-    // Get the shared pointer to the callback
-    auto callback(i->second.lock());
+  std::shared_ptr<JsonRpcCallback> callback;
+
+  {
+    // Get callback if present, removing the callback from future
+    // use. Note that m_callbacks is only locked for this block.
+    std::lock_guard<std::mutex> lock(m_callbacksMutex);
+    auto i(m_callbacks.find(id));
+    if (i != m_callbacks.end()) {
+      // Get the shared pointer to the callback
+      callback = i->second.lock();
+    }
     // Remove the weak pointer to the callback
     m_callbacks.erase(i);
-    // If the callback is still valid, send the response
-    if (callback) {
-      callback->response(response);
-    }
+  }
+
+  // If the callback is still valid, send the response
+  if (callback) {
+    callback->response(response);
   }
 }
 

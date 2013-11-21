@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <list>
 #include <map>
+#include <mutex>
 #include <string>
 
 #include "cpp/jsonreader.h"
@@ -84,6 +85,8 @@ class JsonRpcPrivate : public JsonRpcStream {
 
   int m_idCounter;
   std::map<Json::Value, std::weak_ptr<JsonRpcCallback>> m_callbacks;
+  /// Access to m_callbacks must take this mutex
+  std::mutex m_callbacksMutex;
 
   /// Collection of all method responses that haven't been sent yet
   ///
