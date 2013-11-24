@@ -8,22 +8,22 @@
 #include <stdexcept>
 #include <string>
 
-class JsonRpcException : public std::runtime_error {
+class JSONRPC_API JsonRpcException : public std::runtime_error {
  public:
-  JSONRPC_API JsonRpcException(
+  JsonRpcException(
       std::string const & methodName,
       Json::Value const & params,
       int code,
       std::string const & message,
       Json::Value const & data);
 
-  JSONRPC_API virtual ~JsonRpcException() throw();
+  virtual ~JsonRpcException() throw();
 
-  JSONRPC_API Json::Value const & params() const;
-  JSONRPC_API std::string const & methodName() const;
-  JSONRPC_API int code() const;
-  JSONRPC_API std::string const & message() const;
-  JSONRPC_API Json::Value const & data() const;
+  Json::Value const & params() const;
+  std::string const & methodName() const;
+  int code() const;
+  std::string const & message() const;
+  Json::Value const & data() const;
 
  private:
   std::string const m_methodName;

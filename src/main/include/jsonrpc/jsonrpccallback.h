@@ -5,10 +5,10 @@
 
 #include <jsoncpp/json/value.h>
 
-class JsonRpcCallback {
+class JSONRPC_API JsonRpcCallback {
  public:
-  JSONRPC_API virtual ~JsonRpcCallback();
-  JSONRPC_API virtual void response(Json::Value const & response) = 0;
+  virtual ~JsonRpcCallback();
+  virtual void response(Json::Value const & response) = 0;
 };
 
 #endif  // SRC_MAIN_INCLUDE_JSONRPC_JSONRPCCALLBACK_H_

@@ -9,7 +9,7 @@
 
 class JsonRpcPrivate;
 
-class JsonRpcMethod {
+class JSONRPC_API JsonRpcMethod {
  public:
   /// Client response sender
   ///
@@ -19,36 +19,36 @@ class JsonRpcMethod {
   /// and send a response at some later time.
   class Response {
    public:
-    JSONRPC_API Response(JsonRpcPrivate *jsonRpcPrivate, const Json::Value &id);
+    Response(JsonRpcPrivate *jsonRpcPrivate, const Json::Value &id);
 
-    JSONRPC_API ~Response();
+    ~Response();
 
     /// Get the original request ID
-    JSONRPC_API Json::Value id() const;
+    Json::Value id() const;
 
     /// Send a successful response
     ///
     /// An exception will be thrown if a response has already been
     /// sent or if the connection is dead.
-    JSONRPC_API void sendResult(const Json::Value &result);
+    void sendResult(const Json::Value &result);
 
     /// Send an error response
     ///
     /// An exception will be thrown if a response has already been
     /// sent or if the connection is dead.
-    JSONRPC_API void sendError(const Json::Value &error);
+    void sendError(const Json::Value &error);
 
     /// Close the response so that it never gets sent
     ///
     /// This is used if the connection dies.
-    JSONRPC_API void invalidate();
+    void invalidate();
 
    private:
     class Private;
     std::unique_ptr<Private> m_private;
   };
 
-  JSONRPC_API virtual ~JsonRpcMethod();
+  virtual ~JsonRpcMethod();
 
   /// Handle a request
   ///
@@ -56,7 +56,7 @@ class JsonRpcMethod {
   /// either a result or an error. The response can be sent
   /// immediately if the result is ready, or the client can hold on to
   /// the response and send it at some later time.
-  JSONRPC_API virtual void invoke(
+  virtual void invoke(
       const Json::Value &params,
       std::shared_ptr<Response> response) = 0;
 };
@@ -66,15 +66,15 @@ class JsonRpcMethod {
 /// JSON-RPC notifications are the same as regular requests except no
 /// response is expected. This class just provides a more convenient
 /// override of invoke() that does not take a response parameter.
-class JsonRpcNotification : public JsonRpcMethod {
+class JSONRPC_API JsonRpcNotification : public JsonRpcMethod {
  public:
-  JSONRPC_API virtual ~JsonRpcNotification();
+  virtual ~JsonRpcNotification();
 
   /// Handle a request
-  JSONRPC_API virtual void invoke(const Json::Value &params) = 0;
+  virtual void invoke(const Json::Value &params) = 0;
 
   /// Call the other invoke() override without the response
-  JSONRPC_API virtual void invoke(
+  virtual void invoke(
       const Json::Value &params,
       std::shared_ptr<Response> response) override;
 };
