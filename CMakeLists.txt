@@ -27,14 +27,14 @@ include_directories(
   src/main/include)
 
 # This is the macro used in headers to indicate export of a function/class
-set(JSONRPC_API JSONRPC_API)
+set(API_DEFINE JSONRPC_API)
 
 if(WIN32)
-  add_definitions("-D${JSONRPC_API}=__declspec(dllexport)")
+  add_definitions("-D${API_DEFINE}=__declspec(dllexport)")
 else()
   add_definitions(
     "-fvisibility=hidden"
-    "-D${JSONRPC_API}=__attribute__ ((visibility (\"default\")))")
+    "-D${API_DEFINE}=__attribute__ ((visibility (\"default\")))")
 endif()
 
 add_library(
@@ -57,19 +57,19 @@ include(CMakePackageConfigHelpers)
 
 # Names of files for exporting
 set(JSONRPC_CONFIG "${CMAKE_BINARY_DIR}/JsonRpcConfig.cmake")
-set(JSONRPC_CONFIG_TEMPLATE "JsonRpcConfig.cmake.in")
 set(JSONRPC_CONFIG_VERSION "${CMAKE_BINARY_DIR}/JsonRpcConfigVersion.cmake")
-set(JSONRPC_TARGETS_FILE "JsonRpcTargets")
+set(TARGETS_FILE "JsonRpcTargets")
 
 # Create the config file from the config template
 configure_package_config_file(
-  "${JSONRPC_CONFIG_TEMPLATE}"
+  "${CONFIG_TEMPLATE}"
   "${JSONRPC_CONFIG}"
   INSTALL_DESTINATION ${CONFIG_INSTALL_DESTINATION}
   PATH_VARS
     CONFIG_INSTALL_DESTINATION
     INCLUDE_INSTALL_DESTINATION
-    JSONRPC_TARGETS_FILE
+    TARGETS_FILE
+    API_DEFINE
 )
 
 # Create the version file
@@ -82,7 +82,7 @@ write_basic_package_version_file(
 # Install The library, exporting the targets to the targets file
 install(
   TARGETS jsonrpc
-  EXPORT ${JSONRPC_TARGETS_FILE}
+  EXPORT ${TARGETS_FILE}
   RUNTIME DESTINATION ${BIN_INSTALL_DESTINATION}
   LIBRARY DESTINATION ${LIB_INSTALL_DESTINATION}
   ARCHIVE DESTINATION ${LIB_INSTALL_DESTINATION}
@@ -95,7 +95,7 @@ install(
 )
 
 install(
-  EXPORT ${JSONRPC_TARGETS_FILE}
+  EXPORT ${TARGETS_FILE}
   NAMESPACE JSONRPC::
   DESTINATION ${CONFIG_INSTALL_DESTINATION}
 )
