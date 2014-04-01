@@ -55,9 +55,9 @@ target_link_libraries(jsonrpc JSONCPP::json)
 include(CMakePackageConfigHelpers)
 
 # Names of files for exporting
-set(JSONRPC_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/JsonRpcConfig.cmake")
-set(JSONRPC_CONFIG_TEMPLATE "./JsonRpcConfig.cmake.in")
-set(JSONRPC_CONFIG_VERSION "${CMAKE_CURRENT_BINARY_DIR}/JsonRpcConfigVersion.cmake")
+set(JSONRPC_CONFIG "${CMAKE_BINARY_DIR}/JsonRpcConfig.cmake")
+set(JSONRPC_CONFIG_TEMPLATE "JsonRpcConfig.cmake.in")
+set(JSONRPC_CONFIG_VERSION "${CMAKE_BINARY_DIR}/JsonRpcConfigVersion.cmake")
 set(JSONRPC_TARGETS_FILE "JsonRpcTargets")
 
 # Create the config file from the config template
