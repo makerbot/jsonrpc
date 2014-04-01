@@ -3,7 +3,7 @@
 # chosen arbitrarily
 cmake_minimum_required(VERSION 2.8.9)
 
-project(json-cpp CXX)
+project(jsonrpc CXX)
 
 set(JSONRPC_VERSION 0.0.0)
 
