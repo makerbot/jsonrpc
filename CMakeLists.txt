@@ -13,7 +13,7 @@ set(LIB_INSTALL_DESTINATION lib)
 set(BIN_INSTALL_DESTINATION bin)
 set(INCLUDE_INSTALL_DESTINATION include)
 
-# Import libA
+# Import json-cpp
 find_package(
   JsonCpp
   CONFIG
