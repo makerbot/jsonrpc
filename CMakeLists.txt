@@ -3,9 +3,9 @@
 # chosen arbitrarily
 cmake_minimum_required(VERSION 2.8.9)
 
-project(jsonrpc CXX)
+project(JsonRpc CXX)
 
-set(JSONRPC_VERSION 0.0.0)
+set(${PROJECT_NAME}_VERSION 0.0.0)
 
 # Common paths & utils
 find_package(
@@ -16,10 +16,9 @@ find_package(
 
 # Import json-cpp
 find_package(
-  JsonCpp
+  JsonCpp ${${PROJECT_NAME}_VERSION}
   CONFIG
   REQUIRED
-  VERSION ${JSONRPC_VERSION}
   NO_CMAKE_BUILDS_PATH)
 
 include_directories(
@@ -50,34 +49,7 @@ add_library(
   src/main/cpp/jsonrpcstream.cpp)
 
 # Link in jsoncpp
-target_link_libraries(jsonrpc JSONCPP::json)
-
-# for configure_package_config_file() and write_basic_package_version_file()
-include(CMakePackageConfigHelpers)
-
-# Names of files for exporting
-set(JSONRPC_CONFIG "${CMAKE_BINARY_DIR}/JsonRpcConfig.cmake")
-set(JSONRPC_CONFIG_VERSION "${CMAKE_BINARY_DIR}/JsonRpcConfigVersion.cmake")
-set(TARGETS_FILE "JsonRpcTargets")
-
-# Create the config file from the config template
-configure_package_config_file(
-  "${CONFIG_TEMPLATE}"
-  "${JSONRPC_CONFIG}"
-  INSTALL_DESTINATION ${CONFIG_INSTALL_DESTINATION}
-  PATH_VARS
-    CONFIG_INSTALL_DESTINATION
-    INCLUDE_INSTALL_DESTINATION
-    TARGETS_FILE
-    API_DEFINE
-)
-
-# Create the version file
-write_basic_package_version_file(
-  "${JSONRPC_CONFIG_VERSION}"
-  VERSION ${JSONRPC_VERSION}
-  COMPATIBILITY SameMajorVersion
-)
+target_link_libraries(jsonrpc JsonCpp::json)
 
 # Install The library, exporting the targets to the targets file
 install(
@@ -88,15 +60,10 @@ install(
   ARCHIVE DESTINATION ${LIB_INSTALL_DESTINATION}
 )
 
-# Install the config & target files for import
-install(
-  FILES "${JSONRPC_CONFIG}" "${JSONRPC_CONFIG_VERSION}"
-  DESTINATION ${CONFIG_INSTALL_DESTINATION}
-)
-
+# Install the target file for import
 install(
   EXPORT ${TARGETS_FILE}
-  NAMESPACE JSONRPC::
+  NAMESPACE ${PROJECT_NAME}::
   DESTINATION ${CONFIG_INSTALL_DESTINATION}
 )
 
