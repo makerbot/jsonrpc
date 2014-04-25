@@ -25,17 +25,6 @@ include_directories(
   src/main/
   src/main/include)
 
-# This is the macro used in headers to indicate export of a function/class
-set(API_DEFINE JSONRPC_API)
-
-if(WIN32)
-  add_definitions("-D${API_DEFINE}=__declspec(dllexport)")
-else()
-  add_definitions(
-    "-fvisibility=hidden"
-    "-D${API_DEFINE}=__attribute__ ((visibility (\"default\")))")
-endif()
-
 add_library(
   jsonrpc
   SHARED
@@ -50,6 +39,9 @@ add_library(
 
 # Link in jsoncpp
 target_link_libraries(jsonrpc JsonCpp::json)
+
+mb_generate_config_files()
+mb_set_api_visibility()
 
 # Install The library, exporting the targets to the targets file
 install(
