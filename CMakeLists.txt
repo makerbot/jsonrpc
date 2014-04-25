@@ -61,6 +61,6 @@ install(
 
 # Install the include files
 install(
-  DIRECTORY src/main/include
+  DIRECTORY src/main/include/jsonrpc
   DESTINATION ${INCLUDE_INSTALL_DESTINATION}
 )
