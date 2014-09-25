@@ -4,9 +4,10 @@ project(jsonrpc)
 add_CXX_compiler_flags()
 
 add_api(JSONRPC)
-add_api(JSON)
+add_import_api(JSON)
 
-set_shared(false)
+#set_shared(false)
+set_shared(true)
 install_headers(src/main/include/)
 
 include_directories(${INCLUDE_OUTPUT_PATH})
