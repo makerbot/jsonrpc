@@ -11,5 +11,7 @@ set(sources
     jsonrpcprivate.cpp
     jsonrpcstream.cpp)
 add_library(jsonrpc ${LIB_TYPE} ${sources} ${headers})
+target_link_libraries(jsonrpc
+    jsoncpp)
 
 
