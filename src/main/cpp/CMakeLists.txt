@@ -1,7 +1,6 @@
 set(headers
     jsonreader.h
-    jsonrpcprivate.h
-    )
+    jsonrpcprivate.h)
 set(sources
     jsonreader.cpp
     jsonrpc.cpp
@@ -13,5 +12,3 @@ set(sources
 add_library(jsonrpc ${LIB_TYPE} ${sources} ${headers})
 target_link_libraries(jsonrpc
     jsoncpp)
-
-
