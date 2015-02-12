@@ -11,3 +11,7 @@
 *.pdb
 *.vcxproj
 *.rc
+
+# default cmake build folders
+_build
+_build64
