@@ -15,11 +15,11 @@ set(sources
 include_directories("${PROJECT_SOURCE_DIR}/src/main")
 include_directories("${PROJECT_SOURCE_DIR}/src/main/include")
 
-add_api(JSONRPC_API)
-
 add_compiler_flags()
 
 add_library(jsonrpc SHARED ${sources} ${headers})
+
+export_api(jsonrpc JSONRPC_API)
 
 target_link_libraries(
     jsonrpc
@@ -27,8 +27,7 @@ target_link_libraries(
 
 install_config(
     NAME JsonRpc
-    TARGET jsonrpc
-    API JSONRPC_API)
+    TARGET jsonrpc)
 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/include/jsonrpc"
