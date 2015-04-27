@@ -21,9 +21,7 @@ add_library(jsonrpc SHARED ${sources} ${headers})
 
 export_api(jsonrpc JSONRPC_API)
 
-target_link_libraries(
-    jsonrpc
-    JsonCpp::jsoncpp)
+target_link_libraries(jsonrpc JsonCpp::jsoncpp)
 
 install_config(
     NAME JsonRpc
