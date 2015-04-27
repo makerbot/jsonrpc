@@ -29,4 +29,4 @@ install_config(
 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/include/jsonrpc"
-    DESTINATION "${HEADER_INSTALL_DESTINATION}")
+    DESTINATION "${HEADER_INSTALL_DIR}")
