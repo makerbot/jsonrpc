@@ -31,6 +31,13 @@ void JsonRpc::invoke(
   m_private->invoke(methodName, params, callback);
 }
 
+void JsonRpc::invokeShared(
+    const std::string &methodName,
+    const Json::Value &params,
+    std::shared_ptr<JsonRpcCallback> callback) {
+  m_private->invokeShared(methodName, params, callback);
+}
+
 void JsonRpc::feedInput(
     const char * const buffer,
     const std::size_t length) {

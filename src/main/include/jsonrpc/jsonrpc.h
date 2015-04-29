@@ -63,6 +63,18 @@ class JsonRpc {
       const Json::Value &params,
       std::weak_ptr<JsonRpcCallback> callback);
 
+  /// Invoke a method on the other endpoint
+  ///
+  /// This keeps a shared pointer to the callback, so it should only
+  /// be used for callbacks designed for arbitrarily long lifetimes.
+  ///
+  /// If the current output stream is invalid, an InvalidOutputStream
+  /// exception is thrown.
+  JSONRPC_API void invokeShared(
+      const std::string &methodName,
+      const Json::Value &params,
+      std::shared_ptr<JsonRpcCallback> callback);
+
   /// Input data received from the other endpoint to JsonReader
   JSONRPC_API void feedInput(
       const char * const buffer,

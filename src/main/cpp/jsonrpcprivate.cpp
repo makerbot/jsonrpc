@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <string>
+#include <memory>
 
 #include "cpp/jsonrpcprivate.h"
 #include "jsoncpp/json/reader.h"
@@ -10,6 +11,23 @@
 #include "jsoncpp/json/writer.h"
 #include "jsonrpc/jsonrpcmethod.h"
 #include "jsonrpc/jsonrpcstream.h"
+
+template <class T>
+class MaybeWeakPtr {
+ public:
+  MaybeWeakPtr() {}
+  explicit MaybeWeakPtr(const std::weak_ptr<T> &ptr)
+      : m_weakPtr(ptr) {
+  }
+  explicit MaybeWeakPtr(const std::shared_ptr<T> &ptr)
+      : m_sharedPtr(ptr), m_weakPtr(ptr) {
+  }
+  std::shared_ptr<T> lock() { return m_weakPtr.lock(); }
+  bool expired() { return m_weakPtr.expired(); }
+ private:
+  std::shared_ptr<T> m_sharedPtr;
+  std::weak_ptr<T> m_weakPtr;
+};
 
 JsonRpcPrivate::JsonRpcPrivate()
     : m_jsonReader(* this)
@@ -64,10 +82,10 @@ static void serializeAndSendJson(
   }
 }
 
-void JsonRpcPrivate::invoke(
+void JsonRpcPrivate::invokeMaybeWeak(
     std::string const & methodName,
     Json::Value const & params,
-    std::weak_ptr<JsonRpcCallback> callback) {
+    MaybeWeakPtr<JsonRpcCallback> callback) {
   Json::Value request(Json::objectValue);
   request["jsonrpc"] = Json::Value("2.0");
   request["method"] = Json::Value(methodName);
@@ -86,6 +104,20 @@ void JsonRpcPrivate::invoke(
   }
 
   serializeAndSendJson(request, m_output);
+}
+
+void JsonRpcPrivate::invoke(
+    std::string const & methodName,
+    Json::Value const & params,
+    std::weak_ptr<JsonRpcCallback> callback) {
+  invokeMaybeWeak(methodName, params, MaybeWeakPtr<JsonRpcCallback>(callback));
+}
+
+void JsonRpcPrivate::invokeShared(
+    std::string const & methodName,
+    Json::Value const & params,
+    std::shared_ptr<JsonRpcCallback> callback) {
+  invokeMaybeWeak(methodName, params, MaybeWeakPtr<JsonRpcCallback>(callback));
 }
 
 void JsonRpcPrivate::feed(char const * const buffer, std::size_t const length) {
