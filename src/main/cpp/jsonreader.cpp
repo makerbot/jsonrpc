@@ -34,7 +34,7 @@ void JsonReader::transition(char const ch) {
       if ('{' == ch || '[' == ch) {
         m_state = S1;
         m_stack.push(ch);
-      } else if (' ' != ch || '\t' != ch || '\n' != ch || '\r' != ch) {
+      } else if (' ' != ch && '\t' != ch && '\n' != ch && '\r' != ch) {
         send();
       }
       break;
