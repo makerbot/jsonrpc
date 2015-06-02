@@ -24,6 +24,10 @@ void JsonRpc::addMethod(
   m_private->addMethod(methodName, method);
 }
 
+void JsonRpc::removeMethod(const std::string &methodName) {
+  m_private->removeMethod(methodName);
+}
+
 void JsonRpc::invoke(
     const std::string &methodName,
     const Json::Value &params,

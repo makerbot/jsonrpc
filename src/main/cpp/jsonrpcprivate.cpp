@@ -71,6 +71,10 @@ void JsonRpcPrivate::addMethod(
   m_methods[name] = method;
 }
 
+void JsonRpcPrivate::removeMethod(std::string const & name) {
+  m_methods.erase(name);
+}
+
 /// Serialize the JSON and try to send it, throw an exception on failure
 static void serializeAndSendJson(
     const Json::Value &json,

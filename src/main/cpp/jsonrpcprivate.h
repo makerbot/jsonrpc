@@ -43,6 +43,8 @@ class JsonRpcPrivate : public JsonRpcStream {
       std::string const &name,
       std::weak_ptr<JsonRpcMethod> method);
 
+  void removeMethod(std::string const &name);
+
   void invoke(
       std::string const &,
       Json::Value const &,

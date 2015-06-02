@@ -50,6 +50,9 @@ class JsonRpc {
       const std::string &methodName,
       std::weak_ptr<JsonRpcMethod> method);
 
+  /// Remove a client method
+  JSONRPC_API void removeMethod(const std::string &methodName);
+
   /// Invoke a method on the other endpoint
   ///
   /// Note that only a weak reference to the callback is kept. If the
