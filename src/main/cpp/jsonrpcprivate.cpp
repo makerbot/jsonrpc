@@ -80,7 +80,11 @@ static void serializeAndSendJson(
     const Json::Value &json,
     std::weak_ptr<JsonRpcOutputStream> wp_output) {
   if (auto output = wp_output.lock()) {
-    output->send(Json::FastWriter().write(json));
+    std::string outStr(Json::FastWriter().write(json));
+    // Json::FastWriter adds a newline, which is going to cause
+    // problems when we implement raw mode.  Lets remove it.
+    outStr.erase(outStr.find_last_not_of("\n") + 1);
+    output->send(outStr);
   } else {
     throw JsonRpcInvalidOutputStream();
   }
