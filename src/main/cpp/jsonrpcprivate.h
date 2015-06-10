@@ -55,6 +55,13 @@ class JsonRpcPrivate : public JsonRpcStream {
       Json::Value const &,
       std::shared_ptr<JsonRpcCallback>);
 
+  void invokeRaw(
+      const std::string &,
+      const Json::Value &,
+      const char*,
+      const size_t,
+      std::shared_ptr<JsonRpcCallback>);
+
   void feed(char const *, std::size_t);
   void feed(std::string const &);
   void feedeof();

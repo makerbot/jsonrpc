@@ -90,6 +90,17 @@ static void serializeAndSendJson(
   }
 }
 
+static void sendRaw(
+    char const * const block,
+    size_t const length,
+    std::weak_ptr<JsonRpcOutputStream> wp_output) {
+  if (auto output = wp_output.lock()) {
+    output->send(block, length);
+  } else {
+    throw JsonRpcInvalidOutputStream();
+  }
+}
+
 void JsonRpcPrivate::invokeMaybeWeak(
     std::string const & methodName,
     Json::Value const & params,
@@ -126,6 +137,16 @@ void JsonRpcPrivate::invokeShared(
     Json::Value const & params,
     std::shared_ptr<JsonRpcCallback> callback) {
   invokeMaybeWeak(methodName, params, MaybeWeakPtr<JsonRpcCallback>(callback));
+}
+
+void JsonRpcPrivate::invokeRaw(
+    std::string const & methodName,
+    Json::Value const & params,
+    char const * const block,
+    size_t const length,
+    std::shared_ptr<JsonRpcCallback> callback) {
+  invokeMaybeWeak(methodName, params, MaybeWeakPtr<JsonRpcCallback>(callback));
+  sendRaw(block, length, m_output);
 }
 
 void JsonRpcPrivate::feed(char const * const buffer, std::size_t const length) {
@@ -353,7 +374,9 @@ Json::Value JsonRpcPrivate::handleObject(Json::Value const & jsonObject) {
     response = invalidRequest(null);
   } else {
     Json::Value const id(jsonObject["id"]);
-    if (isRequest(jsonObject)) {
+    if (!id.isInt()) {
+      response = parseError();
+    } else if (isRequest(jsonObject)) {
       response = handleRequest(jsonObject, id);
     } else if (isResponse(jsonObject)) {
       Json::Value const null;

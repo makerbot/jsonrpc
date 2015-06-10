@@ -78,6 +78,14 @@ class JsonRpc {
       const Json::Value &params,
       std::shared_ptr<JsonRpcCallback> callback);
 
+  /// Send a jsonrpc request followed immediately by raw data
+  JSONRPC_API void invokeRaw(
+      const std::string &methodName,
+      const Json::Value &params,
+      const char * block,
+      const size_t length,
+      std::shared_ptr<JsonRpcCallback> callback);
+
   /// Input data received from the other endpoint to JsonReader
   JSONRPC_API void feedInput(
       const char * const buffer,
