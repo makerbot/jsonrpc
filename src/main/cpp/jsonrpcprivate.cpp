@@ -374,9 +374,7 @@ Json::Value JsonRpcPrivate::handleObject(Json::Value const & jsonObject) {
     response = invalidRequest(null);
   } else {
     Json::Value const id(jsonObject["id"]);
-    if (!id.isInt()) {
-      response = parseError();
-    } else if (isRequest(jsonObject)) {
+    if (isRequest(jsonObject)) {
       response = handleRequest(jsonObject, id);
     } else if (isResponse(jsonObject)) {
       Json::Value const null;
