@@ -12,9 +12,13 @@ class JSONRPC_API JsonRpcOutputStream {
  public:
   virtual ~JsonRpcOutputStream();
 
-  /// Send 'buffer' to the other endpoint
-  virtual void send(const std::string &buffer) = 0;
-  virtual void send(const char * const buf, const size_t length) = 0;
+  /// Send length bytes from buf to the other endpoint
+  virtual void send(const char * buf, size_t length) = 0;
+
+  /// Convenience function to send from a std::string
+  inline void send(const std::string &buffer) {
+    send(buffer.data(), buffer.size());
+  }
 };
 
 #endif  // SRC_MAIN_INCLUDE_JSONRPC_JSONRPCOUTPUTSTREAM_H_
