@@ -1,4 +1,6 @@
 
+find_package(JsonCpp REQUIRED)
+
 set(headers
     jsonreader.h
     jsonrpcprivate.h)
@@ -12,20 +14,24 @@ set(sources
     jsonrpcprivate.cpp
     jsonrpcstream.cpp)
 
-include_directories("${PROJECT_SOURCE_DIR}/src/main")
-include_directories("${PROJECT_SOURCE_DIR}/src/main/include")
-
 add_compiler_flags()
 
 add_library(jsonrpc SHARED ${sources} ${headers})
 
+target_include_directories(
+    jsonrpc
+    PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/main>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/main/include>
+        $<INSTALL_INTERFACE:${HEADER_INSTALL_DIR}>)
+
 export_api(jsonrpc JSONRPC_API)
 
-target_link_libraries(jsonrpc JsonCpp::jsoncpp)
+target_link_libraries(jsonrpc PUBLIC JsonCpp::jsoncpp)
 
-install_config(
+generate_and_install_config(
     NAME JsonRpc
-    TARGET jsonrpc)
+    TARGETS jsonrpc)
 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/include/jsonrpc"
