@@ -16,7 +16,7 @@ set(sources
 
 add_compiler_flags()
 
-add_library(jsonrpc SHARED ${sources} ${headers})
+add_library(jsonrpc ${sources} ${headers})
 
 target_include_directories(
     jsonrpc
