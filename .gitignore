@@ -11,3 +11,4 @@
 *.pdb
 *.vcxproj
 *.rc
+/install_manifest.txt
