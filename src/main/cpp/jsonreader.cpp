@@ -41,6 +41,10 @@ void JsonReader::send() {
   m_jsonRpcPrivate.jsonReaderCallback(jsonText);
 }
 
+void JsonReader::setDelimiter(char ch){
+  m_packetDelimiter = ch;
+}
+
 bool JsonReader::transition(char const ch) {
   switch (m_state) {
     case S0:
@@ -96,6 +100,8 @@ void JsonReader::feed(char ch) {
   m_buffer << ch;
   if(transition(ch))
 	  send();
+  else if(m_packetDelimiter == ch) //use delimiter as sync sequence. we assume that json is passed as minified string
+    return send();
 }
 
 void JsonReader::feed(char const * const buffer, std::size_t const length) {

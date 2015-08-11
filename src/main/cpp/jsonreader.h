@@ -19,6 +19,7 @@ class JsonReader : public JsonRpcStream {
   JSONRPC_API void feed(char const *, std::size_t);
   JSONRPC_API void feed(std::string const &);
   JSONRPC_API void feedeof(void);
+  JSONRPC_API void setDelimiter(char);
 
  private:
   enum State { S0, S1, S2, S3 };
@@ -31,6 +32,7 @@ class JsonReader : public JsonRpcStream {
   State m_state;
   std::stack <char> m_stack;
   std::ostringstream m_buffer;
+  char m_packetDelimiter = '\n'; //by default use \n char as sync sequence
 
   // Disable copy constructor and assignment.
 
