@@ -7,6 +7,10 @@ env = Environment(
     tools=['default', 'mb_install'],
     toolpath=['#/../mw-scons-tools', '#/Install/mw-scons-tools'])
 
+debug = ARGUMENTS.get('debug', 0)
+if int(debug):
+    env.Append(CCFLAGS = '-g')
+
 env.MBAddStandardCompilerFlags()
 
 env.MBAddIncludePaths([
