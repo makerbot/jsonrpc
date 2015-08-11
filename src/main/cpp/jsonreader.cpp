@@ -23,19 +23,32 @@ void JsonReader::reset() {
 void JsonReader::send() {
   std::string const jsonText(m_buffer.str());
   reset();
-  if (!jsonText.empty()) {
-    m_jsonRpcPrivate.jsonReaderCallback(jsonText);
+
+  if (jsonText.empty())
+    return;
+
+  if(jsonText.size() == 1){
+    if( jsonText.find(" ") == 0
+       || jsonText.find("\t") == 0
+       || jsonText.find("\n") == 0
+       || jsonText.find("\r") == 0
+    )
+      return;
   }
+  if(jsonText.size() == 2 && jsonText.find("\r\n") == 0 )
+    return;
+
+  m_jsonRpcPrivate.jsonReaderCallback(jsonText);
 }
 
-void JsonReader::transition(char const ch) {
+bool JsonReader::transition(char const ch) {
   switch (m_state) {
     case S0:
       if ('{' == ch || '[' == ch) {
         m_state = S1;
         m_stack.push(ch);
-      } else if (' ' != ch || '\t' != ch || '\n' != ch || '\r' != ch) {
-        send();
+      } else if (' ' == ch || '\t' == ch || '\n' == ch || '\r' == ch) {
+        return true;
       }
       break;
 
@@ -59,9 +72,7 @@ void JsonReader::transition(char const ch) {
           }
         }
 
-        if (send) {
-          this->send();
-        }
+        return send;
       }
       break;
 
@@ -77,11 +88,14 @@ void JsonReader::transition(char const ch) {
       m_state = S2;
       break;
   }
+
+  return false;
 }
 
 void JsonReader::feed(char ch) {
   m_buffer << ch;
-  transition(ch);
+  if(transition(ch))
+	  send();
 }
 
 void JsonReader::feed(char const * const buffer, std::size_t const length) {

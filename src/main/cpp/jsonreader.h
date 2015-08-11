@@ -24,7 +24,7 @@ class JsonReader : public JsonRpcStream {
   enum State { S0, S1, S2, S3 };
 
   void reset(void);
-  void transition(char ch);
+  bool transition(char ch);
   void send(void);
 
   JsonRpcPrivate & m_jsonRpcPrivate;
