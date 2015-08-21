@@ -312,7 +312,8 @@ Json::Value JsonRpcPrivate::handleObject(Json::Value const & jsonObject) {
     Json::Value const null;
     response = invalidRequest(null);
   } else {
-    Json::Value const id(jsonObject["id"]); //TODO: handle special responses (e.g. parse errors)
+    Json::Value const id(jsonObject["id"]);
+    // TODO(romansavrulin): handle special responses (e.g. parse errors)
     if (isRequest(jsonObject)) {
       response = handleRequest(jsonObject, id);
     } else if (isResponse(jsonObject)) {
