@@ -14,9 +14,9 @@ set(sources
     jsonrpcprivate.cpp
     jsonrpcstream.cpp)
 
-add_compiler_flags()
-
 add_library(jsonrpc ${sources} ${headers})
+
+use_standard_flags(jsonrpc)
 
 target_include_directories(
     jsonrpc

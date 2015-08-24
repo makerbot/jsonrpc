@@ -356,9 +356,9 @@ void JsonRpcPrivate::handleResponse(
     if (i != m_callbacks.end()) {
       // Get the shared pointer to the callback
       callback = i->second.lock();
+      // Remove the weak pointer to the callback
+      m_callbacks.erase(i);
     }
-    // Remove the weak pointer to the callback
-    m_callbacks.erase(i);
   }
 
   // If the callback is still valid, send the response
@@ -374,6 +374,7 @@ Json::Value JsonRpcPrivate::handleObject(Json::Value const & jsonObject) {
     response = invalidRequest(null);
   } else {
     Json::Value const id(jsonObject["id"]);
+    // TODO(romansavrulin): handle special responses (e.g. parse errors)
     if (isRequest(jsonObject)) {
       response = handleRequest(jsonObject, id);
     } else if (isResponse(jsonObject)) {
