@@ -50,6 +50,9 @@ class JsonRpc {
       const std::string &methodName,
       std::weak_ptr<JsonRpcMethod> method);
 
+  /// Remove a client method
+  JSONRPC_API void removeMethod(const std::string &methodName);
+
   /// Invoke a method on the other endpoint
   ///
   /// Note that only a weak reference to the callback is kept. If the
@@ -62,6 +65,26 @@ class JsonRpc {
       const std::string &methodName,
       const Json::Value &params,
       std::weak_ptr<JsonRpcCallback> callback);
+
+  /// Invoke a method on the other endpoint
+  ///
+  /// This keeps a shared pointer to the callback, so it should only
+  /// be used for callbacks designed for arbitrarily long lifetimes.
+  ///
+  /// If the current output stream is invalid, an InvalidOutputStream
+  /// exception is thrown.
+  JSONRPC_API void invokeShared(
+      const std::string &methodName,
+      const Json::Value &params,
+      std::shared_ptr<JsonRpcCallback> callback);
+
+  /// Send a jsonrpc request followed immediately by raw data
+  JSONRPC_API void invokeRaw(
+      const std::string &methodName,
+      const Json::Value &params,
+      const char * block,
+      const size_t length,
+      std::shared_ptr<JsonRpcCallback> callback);
 
   /// Input data received from the other endpoint to JsonReader
   JSONRPC_API void feedInput(

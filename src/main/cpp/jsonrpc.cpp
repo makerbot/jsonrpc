@@ -24,11 +24,36 @@ void JsonRpc::addMethod(
   m_private->addMethod(methodName, method);
 }
 
+void JsonRpc::removeMethod(const std::string &methodName) {
+  m_private->removeMethod(methodName);
+}
+
 void JsonRpc::invoke(
     const std::string &methodName,
     const Json::Value &params,
     std::weak_ptr<JsonRpcCallback> callback) {
   m_private->invoke(methodName, params, callback);
+}
+
+void JsonRpc::invokeShared(
+    const std::string &methodName,
+    const Json::Value &params,
+    std::shared_ptr<JsonRpcCallback> callback) {
+  m_private->invokeShared(methodName, params, callback);
+}
+
+void JsonRpc::invokeRaw(
+    const std::string &methodName,
+    const Json::Value &params,
+    const char* block,
+    const size_t length,
+    std::shared_ptr<JsonRpcCallback> callback) {
+  m_private->invokeRaw(
+      methodName,
+      params,
+      block,
+      length,
+      callback);
 }
 
 void JsonRpc::feedInput(

@@ -15,6 +15,14 @@
 #include "jsonrpc/jsonrpcmethod.h"
 #include "jsonrpc/jsonrpcstream.h"
 
+// Since we have APIs that support both weak and shared pointers,
+// we use an internal representation for these that can handle
+// both.  This class can only be used by locking to a shared
+// pointer, but if it is backed by a shared pointer then locking
+// will always succeed.
+template <class T>
+class MaybeWeakPtr;
+
 class JsonRpcPrivate : public JsonRpcStream {
  public:
   JsonRpcPrivate();
@@ -35,10 +43,24 @@ class JsonRpcPrivate : public JsonRpcStream {
       std::string const &name,
       std::weak_ptr<JsonRpcMethod> method);
 
+  void removeMethod(std::string const &name);
+
   void invoke(
       std::string const &,
       Json::Value const &,
       std::weak_ptr<JsonRpcCallback>);
+
+  void invokeShared(
+      std::string const &,
+      Json::Value const &,
+      std::shared_ptr<JsonRpcCallback>);
+
+  void invokeRaw(
+      const std::string &,
+      const Json::Value &,
+      const char*,
+      const size_t,
+      std::shared_ptr<JsonRpcCallback>);
 
   void feed(char const *, std::size_t);
   void feed(std::string const &);
@@ -53,6 +75,10 @@ class JsonRpcPrivate : public JsonRpcStream {
       const Json::Value &error);
 
  private:
+  void invokeMaybeWeak(
+      std::string const &,
+      Json::Value const &,
+      MaybeWeakPtr<JsonRpcCallback>);
   Json::Value errorResponse(
       Json::Value const &,
       int,
@@ -84,7 +110,7 @@ class JsonRpcPrivate : public JsonRpcStream {
   std::map<std::string, std::weak_ptr<JsonRpcMethod>> m_methods;
 
   int m_idCounter;
-  std::map<Json::Value, std::weak_ptr<JsonRpcCallback>> m_callbacks;
+  std::map<Json::Value, MaybeWeakPtr<JsonRpcCallback>> m_callbacks;
   /// Access to m_callbacks must take this mutex
   std::mutex m_callbacksMutex;
 
