@@ -97,6 +97,10 @@ class JsonRpc {
   /// Input end-of-file received from the other endpoint to JsonReader
   JSONRPC_API void feedEOF();
 
+  JSONRPC_API void setRawHandler(
+      std::shared_ptr<std::function<void(char *, const size_t)> > rawHandler,
+      const size_t);
+
  private:
   JsonRpc(const JsonRpc &other);
 

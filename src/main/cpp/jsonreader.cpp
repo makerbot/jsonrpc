@@ -15,6 +15,11 @@ void JsonReader::reset() {
   m_state = S0;
   m_buffer.str(std::string());
 
+  m_rawHandler.reset();
+  m_rawBuffer.reset();
+  m_rawBytesReceived = 0;
+  m_expectedLength = 0;
+
   while (!m_stack.empty()) {
     m_stack.pop();
   }
@@ -26,6 +31,8 @@ void JsonReader::send() {
   if (!jsonText.empty()) {
     m_jsonRpcPrivate.jsonReaderCallback(jsonText);
   }
+  if (m_rawHandler)
+    m_state = S4;
 }
 
 void JsonReader::transition(char const ch) {
@@ -76,6 +83,14 @@ void JsonReader::transition(char const ch) {
     case S3:
       m_state = S2;
       break;
+
+    case S4:
+      m_rawBuffer[m_rawBytesReceived++] = ch;
+      if (m_rawHandler && (m_rawBytesReceived == m_expectedLength)) {
+        (*m_rawHandler)(m_rawBuffer.release(), m_expectedLength);
+        reset();
+      }
+      break;
   }
 }
 
@@ -99,4 +114,12 @@ void JsonReader::feed(std::string const & str) {
 
 void JsonReader::feedeof() {
   send();
+}
+
+void JsonReader::setRawHandler(
+    std::shared_ptr<std::function<void(char*, const size_t)> > rawHandler,
+    const size_t length) {
+  m_rawHandler = rawHandler;
+  m_expectedLength = length;
+  m_rawBuffer.reset(new char[length]);
 }

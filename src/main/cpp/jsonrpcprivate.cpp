@@ -161,6 +161,12 @@ void JsonRpcPrivate::feedeof() {
   m_jsonReader.feedeof();
 }
 
+void JsonRpcPrivate::setRawHandler(
+    std::shared_ptr<std::function<void(char*, const size_t)> > rawHandler,
+    const size_t length) {
+  m_jsonReader.setRawHandler(rawHandler, length);
+}
+
 void JsonRpcPrivate::sendResponseSuccess(
     JsonRpcMethod::Response &response,
     const Json::Value &result) {

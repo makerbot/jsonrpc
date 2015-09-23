@@ -65,6 +65,9 @@ class JsonRpcPrivate : public JsonRpcStream {
   void feed(char const *, std::size_t);
   void feed(std::string const &);
   void feedeof();
+  void setRawHandler(
+      std::shared_ptr<std::function<void(char*, const size_t)> > rawHandler,
+      const size_t);
 
   void sendResponseSuccess(
       JsonRpcMethod::Response &response,

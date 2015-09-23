@@ -69,3 +69,9 @@ void JsonRpc::feedInput(const std::string &buffer) {
 void JsonRpc::feedEOF() {
   m_private->feedeof();
 }
+
+void JsonRpc::setRawHandler(
+    std::shared_ptr<std::function<void(char*, const size_t)> > rawHandler,
+    const size_t length) {
+  m_private->setRawHandler(rawHandler, length);
+}
