@@ -17,7 +17,7 @@ class JSONRPC_API JsonRpcMethod {
   /// JsonRpcMethod invoke() method. The client can immediately send a
   /// response (i.e. a synchronous response) or hold on to the pointer
   /// and send a response at some later time.
-  class Response {
+  class JSONRPC_API Response {
    public:
     Response(JsonRpcPrivate *jsonRpcPrivate, const Json::Value &id);
 
