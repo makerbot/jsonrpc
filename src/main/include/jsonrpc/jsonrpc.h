@@ -11,6 +11,7 @@
 #include <jsonrpc/jsonrpcstream.h>
 #include <jsonrpc/jsonrpcexception.h>
 
+#include <functional>
 #include <memory>
 #include <string>
 
