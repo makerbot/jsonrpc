@@ -31,7 +31,8 @@ target_link_libraries(jsonrpc PUBLIC JsonCpp::jsoncpp)
 
 generate_and_install_config(
     NAME JsonRpc
-    TARGETS jsonrpc)
+    TARGETS jsonrpc
+    TRANSITIVE_DEPENDENCIES "JsonCpp REQUIRED")
 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/src/main/include/jsonrpc"
