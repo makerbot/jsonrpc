@@ -87,8 +87,12 @@ void JsonReader::transition(char const ch) {
     case S4:
       m_rawBuffer[m_rawBytesReceived++] = ch;
       if (m_rawHandler && (m_rawBytesReceived == m_expectedLength)) {
-        (*m_rawHandler)(m_rawBuffer.release(), m_expectedLength);
-        reset();
+        (*m_rawHandler)(m_rawBuffer.get(), m_expectedLength);
+        // check again to see that expected length hasnt changed
+        // (if not, we're done)
+        if (m_rawBytesReceived == m_expectedLength) {
+            reset();
+        }
       }
       break;
   }
@@ -122,4 +126,5 @@ void JsonReader::setRawHandler(
   m_rawHandler = rawHandler;
   m_expectedLength = length;
   m_rawBuffer.reset(new char[length]);
+  m_rawBytesReceived = 0;
 }
