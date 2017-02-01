@@ -16,3 +16,12 @@ else:
             debug=False,
             stable_required=True)
     ]
+    # TODO(chris): Use platform for morepork instead of this hack
+    if sys.platform.startswith('linux') and sys.maxsize > 2**32:
+        dependencies.extend([
+            artifactory_utils.ArtifactSelector(
+                project="morepork-json-cpp",
+                revision="develop",
+                debug=False,
+                stable_required=True),
+        ])
