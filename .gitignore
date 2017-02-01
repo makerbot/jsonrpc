@@ -1,7 +1,5 @@
 # default cmake build folders
-_build
-_build64
-_build_debug
+/_build*/
 
 # Git hooks bytecode file
 /hook_settings.pyc
