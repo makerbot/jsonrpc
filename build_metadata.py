@@ -9,12 +9,11 @@ else:
         artifactory_utils.ArtifactSelector(
             project="Toolchain-Release",
             revision="develop",
-            debug=False,
+            version='^4.6',
             stable_required=True),
         artifactory_utils.ArtifactSelector(
             project="json-cpp",
             revision="develop",
-            debug=False,
             stable_required=True)
     ]
     # TODO(chris): Use platform for morepork instead of this hack
@@ -23,6 +22,5 @@ else:
             artifactory_utils.ArtifactSelector(
                 project="morepork-json-cpp",
                 revision="develop",
-                debug=False,
                 stable_required=True),
         ])
